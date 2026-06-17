@@ -46,7 +46,7 @@
     .container{padding:18px}
     .filters{display:grid;grid-template-columns:2fr 2fr 1.2fr auto auto;gap:12px;align-items:end;margin-bottom:16px}
     .field{background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px 12px}
-    .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:.03em}
+    .field label{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:.03em}
     .field select,.field input{width:100%;border:none;outline:none;font-size:15px;background:transparent;color:var(--text)}
     .btn{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:12px 16px;font-weight:700;cursor:pointer}
     .btn.secondary{background:#fff;color:var(--blue);border:1px solid var(--blue)}
@@ -61,7 +61,7 @@
     .section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:20px 0 10px}
     .section-title h2{margin:0;font-size:24px;color:#173f7e}
     .kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
-    .kpi-card{color:#fff;padding:14px;border-radius:10px;min-height:116px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+    .kpi-card{position:relative;color:#fff;padding:14px;border-radius:10px;min-height:116px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 1px 2px rgba(0,0,0,.08)}
     .kpi-card h3{margin:0;font-size:15px;font-weight:700;opacity:.95}
     .kpi-card .value{font-size:42px;font-weight:800;line-height:1.05}
     .kpi-card .sub{font-size:13px;opacity:.95}
@@ -99,6 +99,11 @@
     .metric-val{min-width:96px;text-align:right;font-weight:700;color:#243142}
     .small{font-size:12px;color:var(--muted)}
 
+    .ca-mini-btn{border:1px solid #c9dafb;background:#eef4ff;color:#173f7e;border-radius:999px;padding:3px 7px;font-size:10px;font-weight:800;cursor:pointer;letter-spacing:0;text-transform:none;line-height:1}
+    .kpi-card .ca-mini-btn{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.92);border-color:rgba(255,255,255,.7);color:#173f7e}
+    .yellow .ca-mini-btn{background:rgba(255,255,255,.86);color:#173f7e;border-color:rgba(255,255,255,.7)}
+    .summary-ca-row{display:flex;justify-content:flex-end;margin:-6px 0 10px}
+
     @media (max-width:1600px){.kpi-grid{grid-template-columns:repeat(3,1fr)}}
     @media (max-width:1350px){.grid-3{grid-template-columns:1fr 1fr}.sidebar.open{width:360px}.sidebar-inner{width:360px}}
     @media (max-width:1200px){.filters{grid-template-columns:1fr 1fr}.grid-2,.hero{display:grid;grid-template-columns:1fr}.kpi-grid{grid-template-columns:repeat(2,1fr)}.legend-box{min-width:0}.sidebar{display:none}}
@@ -108,7 +113,7 @@
 <body>
   <div class="topbar">
     <div class="title"><span class="burger">☰</span> <span>Tablero · Dashboard Uso Vehicular y Minisplit</span></div>
-    <div></div>
+    <div>🔔 ⚙️</div>
   </div>
 
   <div class="page">
@@ -116,7 +121,7 @@
       <div class="container">
         <div class="filters">
           <div class="field">
-            <label>Grupo / Flotilla</label>
+            <label>Grupo / Flotilla <button class="ca-mini-btn ca-trigger" data-ca="CA-02,CA-04,CA-05" data-title="Filtro por grupo / flotilla" data-subtitle="Criterios relacionados con el selector superior de grupo o flotilla.">CA</button></label>
             <select>
               <option>Todas las flotillas</option>
               <option selected>Refrigerados Norte</option>
@@ -125,7 +130,7 @@
             </select>
           </div>
           <div class="field">
-            <label>Vehículo</label>
+            <label>Vehículo <button class="ca-mini-btn ca-trigger" data-ca="CA-03,CA-04,CA-05" data-title="Filtro por vehículo" data-subtitle="Criterios relacionados con el selector superior de vehículo individual.">CA</button></label>
             <select>
               <option selected>Todos los vehículos</option>
               <option>RF-101 · Isuzu Forward</option>
@@ -134,10 +139,10 @@
             </select>
           </div>
           <div class="field">
-            <label>Periodo</label>
+            <label>Periodo <button class="ca-mini-btn ca-trigger" data-ca="CA-01,CA-04,CA-05" data-title="Filtro por periodo" data-subtitle="Criterios relacionados con el rango de fechas personalizado.">CA</button></label>
             <input value="Junio 01 - Junio 15, 2026" />
           </div>
-          <button class="btn">RECARGAR</button>
+          <button class="btn ca-trigger" data-ca="CA-04,CA-38" data-title="Recarga / actualización del dashboard" data-subtitle="Criterios relacionados con la actualización dinámica de todos los cuadros al ejecutar la consulta.">RECARGAR</button>
           <button id="toggleAllCa" class="btn secondary">Mostrar CA</button>
         </div>
 
@@ -160,21 +165,21 @@
           </div>
         </div>
 
-        <div class="section-title"><h2>Resumen del periodo</h2></div>
+        <div class="section-title"><h2>Resumen del periodo</h2><button class="toggle-inline ca-trigger" data-ca="CA-06,CA-07,CA-08,CA-09,CA-10,CA-11,CA-12,CA-13,CA-14,CA-15" data-title="Header / resumen del periodo" data-subtitle="Criterios relacionados con los cuadros superiores de resumen.">Ver CA del resumen</button></div>
         <div class="kpi-grid">
-          <div class="kpi-card dark"><h3>Vehículos analizados</h3><div class="value">10</div><div class="sub">Flotilla: Refrigerados Norte</div></div>
-          <div class="kpi-card blue"><h3>Distancia total</h3><div class="value">14,820</div><div class="sub">km recorridos</div></div>
-          <div class="kpi-card green"><h3>Horas de trabajo total</h3><div class="value">612</div><div class="sub">hrs · suma del horómetro del reporte</div></div>
-          <div class="kpi-card yellow"><h3>Ralentí total</h3><div class="value">94.6</div><div class="sub">hrs</div></div>
-          <div class="kpi-card purple"><h3>Minisplit ON total</h3><div class="value">286.4</div><div class="sub">hrs</div></div>
-          <div class="kpi-card red"><h3>Minisplit en ralentí</h3><div class="value">91.5</div><div class="sub">hrs</div></div>
-          <div class="kpi-card orange"><h3>Minisplit en movimiento</h3><div class="value">142.1</div><div class="sub">hrs</div></div>
-          <div class="kpi-card dark"><h3>Minisplit con motor apagado</h3><div class="value">52.8</div><div class="sub">hrs</div></div>
-          <div class="kpi-card orange"><h3>Temp. máx. global</h3><div class="value">8.4</div><div class="sub">°C</div></div>
+          <div class="kpi-card dark"><button class="ca-mini-btn ca-trigger" data-ca="CA-06,CA-07" data-title="Cuadro de vehículos analizados" data-subtitle="Criterios relacionados con este cuadro del resumen superior.">CA</button><h3>Vehículos analizados</h3><div class="value">10</div><div class="sub">Flotilla: Refrigerados Norte</div></div>
+          <div class="kpi-card blue"><button class="ca-mini-btn ca-trigger" data-ca="CA-06,CA-08" data-title="Cuadro de distancia total" data-subtitle="Criterios relacionados con este cuadro del resumen superior.">CA</button><h3>Distancia total</h3><div class="value">14,820</div><div class="sub">km recorridos</div></div>
+          <div class="kpi-card green"><button class="ca-mini-btn ca-trigger" data-ca="CA-06,CA-09" data-title="Cuadro de horas de trabajo total" data-subtitle="Criterios relacionados con este cuadro del resumen superior.">CA</button><h3>Horas de trabajo total</h3><div class="value">612</div><div class="sub">hrs · suma del horómetro del reporte</div></div>
+          <div class="kpi-card yellow"><button class="ca-mini-btn ca-trigger" data-ca="CA-06,CA-10" data-title="Cuadro de ralentí total" data-subtitle="Criterios relacionados con este cuadro del resumen superior.">CA</button><h3>Ralentí total</h3><div class="value">94.6</div><div class="sub">hrs</div></div>
+          <div class="kpi-card purple"><button class="ca-mini-btn ca-trigger" data-ca="CA-06,CA-11,CA-16" data-title="Cuadro de Minisplit encendido total" data-subtitle="Criterios relacionados con este cuadro del resumen superior.">CA</button><h3>Minisplit ON total</h3><div class="value">286.4</div><div class="sub">hrs</div></div>
+          <div class="kpi-card red"><button class="ca-mini-btn ca-trigger" data-ca="CA-06,CA-12,CA-16,CA-18" data-title="Cuadro de Minisplit en ralentí" data-subtitle="Criterios relacionados con este cuadro del resumen superior.">CA</button><h3>Minisplit en ralentí</h3><div class="value">91.5</div><div class="sub">hrs</div></div>
+          <div class="kpi-card orange"><button class="ca-mini-btn ca-trigger" data-ca="CA-06,CA-13,CA-16,CA-19" data-title="Cuadro de Minisplit en movimiento" data-subtitle="Criterios relacionados con este cuadro del resumen superior.">CA</button><h3>Minisplit en movimiento</h3><div class="value">142.1</div><div class="sub">hrs</div></div>
+          <div class="kpi-card dark"><button class="ca-mini-btn ca-trigger" data-ca="CA-06,CA-14,CA-16,CA-17" data-title="Cuadro de Minisplit con motor apagado" data-subtitle="Criterios relacionados con este cuadro del resumen superior.">CA</button><h3>Minisplit con motor apagado</h3><div class="value">52.8</div><div class="sub">hrs</div></div>
+          <div class="kpi-card orange"><button class="ca-mini-btn ca-trigger" data-ca="CA-06,CA-15" data-title="Cuadro de temperatura máxima global" data-subtitle="Criterios relacionados con este cuadro del resumen superior.">CA</button><h3>Temp. máx. global</h3><div class="value">8.4</div><div class="sub">°C</div></div>
         </div>
 
         <div class="grid-3">
-          <div class="panel" data-title="Mayor horómetro recorrido" data-ca="CA-01,CA-03,CA-04,CA-05,CA-09,CA-11,CA-13,CA-36">
+          <div class="panel" data-title="Mayor horómetro recorrido" data-ca="CA-01,CA-02,CA-03,CA-04,CA-05,CA-21,CA-22">
             <div class="panel-header">
               <div>
                 <h3>Mayor horómetro recorrido</h3>
@@ -182,7 +187,7 @@
               </div>
               <button class="toggle-inline">Ver CA</button>
             </div>
-            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-05</span><span class="chip">CA-09</span><span class="chip">CA-11</span><span class="chip">CA-13</span><span class="chip">CA-36</span></div>
+            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-05</span><span class="chip">CA-21</span><span class="chip">CA-22</span></div>
             <table>
               <thead><tr><th class="rank-col">#</th><th>Vehículo</th><th>Visual</th><th>Valor</th></tr></thead>
               <tbody>
@@ -195,7 +200,7 @@
             </table>
           </div>
 
-          <div class="panel" data-title="Mayor kilometraje recorrido" data-ca="CA-01,CA-03,CA-04,CA-05,CA-09,CA-11,CA-15,CA-36">
+          <div class="panel" data-title="Mayor kilometraje recorrido" data-ca="CA-01,CA-02,CA-03,CA-04,CA-05,CA-21,CA-23">
             <div class="panel-header">
               <div>
                 <h3>Mayor kilometraje recorrido</h3>
@@ -203,7 +208,7 @@
               </div>
               <button class="toggle-inline">Ver CA</button>
             </div>
-            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-05</span><span class="chip">CA-09</span><span class="chip">CA-11</span><span class="chip">CA-15</span><span class="chip">CA-36</span></div>
+            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-05</span><span class="chip">CA-21</span><span class="chip">CA-23</span></div>
             <table>
               <thead><tr><th class="rank-col">#</th><th>Vehículo</th><th>Visual</th><th>Valor</th></tr></thead>
               <tbody>
@@ -216,7 +221,7 @@
             </table>
           </div>
 
-          <div class="panel" data-title="Distancia recorrida por día" data-ca="CA-01,CA-03,CA-05,CA-09,CA-11,CA-16,CA-36">
+          <div class="panel" data-title="Distancia recorrida por día" data-ca="CA-01,CA-02,CA-03,CA-04,CA-05,CA-20,CA-21,CA-24">
             <div class="panel-header">
               <div>
                 <h3>Distancia recorrida por día</h3>
@@ -224,7 +229,7 @@
               </div>
               <button class="toggle-inline">Ver CA</button>
             </div>
-            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-03</span><span class="chip">CA-05</span><span class="chip">CA-09</span><span class="chip">CA-11</span><span class="chip">CA-16</span><span class="chip">CA-36</span></div>
+            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-05</span><span class="chip">CA-20</span><span class="chip">CA-21</span><span class="chip">CA-24</span></div>
             <table>
               <thead><tr><th class="rank-col">#</th><th>Vehículo</th><th>Visual</th><th>Valor</th></tr></thead>
               <tbody>
@@ -239,7 +244,7 @@
         </div>
 
         <div class="grid-2">
-          <div class="panel" data-title="Horas de trabajo por unidad" data-ca="CA-06,CA-07,CA-08,CA-09,CA-11,CA-18,CA-36">
+          <div class="panel" data-title="Horas de trabajo por unidad" data-ca="CA-01,CA-02,CA-03,CA-04,CA-05,CA-09,CA-21,CA-25">
             <div class="panel-header">
               <div>
                 <h3>Horas de trabajo por unidad</h3>
@@ -247,7 +252,7 @@
               </div>
               <button class="toggle-inline">Ver CA</button>
             </div>
-            <div class="ca-tags"><span class="chip">CA-06</span><span class="chip">CA-07</span><span class="chip">CA-08</span><span class="chip">CA-09</span><span class="chip">CA-11</span><span class="chip">CA-18</span><span class="chip">CA-36</span></div>
+            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-05</span><span class="chip">CA-09</span><span class="chip">CA-21</span><span class="chip">CA-25</span></div>
             <table>
               <thead><tr><th class="rank-col">#</th><th>Vehículo</th><th>Barra</th><th>Valor</th></tr></thead>
               <tbody>
@@ -260,7 +265,7 @@
             </table>
           </div>
 
-          <div class="panel" data-title="Mayor tiempo de ralentí" data-ca="CA-08,CA-09,CA-11,CA-19,CA-36">
+          <div class="panel" data-title="Mayor tiempo de ralentí" data-ca="CA-01,CA-02,CA-03,CA-04,CA-05,CA-10,CA-21,CA-26">
             <div class="panel-header">
               <div>
                 <h3>Mayor tiempo de ralentí</h3>
@@ -268,7 +273,7 @@
               </div>
               <button class="toggle-inline">Ver CA</button>
             </div>
-            <div class="ca-tags"><span class="chip">CA-08</span><span class="chip">CA-09</span><span class="chip">CA-11</span><span class="chip">CA-19</span><span class="chip">CA-36</span></div>
+            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-05</span><span class="chip">CA-10</span><span class="chip">CA-21</span><span class="chip">CA-26</span></div>
             <table>
               <thead><tr><th class="rank-col">#</th><th>Vehículo</th><th>Barra</th><th>Valor</th></tr></thead>
               <tbody>
@@ -285,9 +290,9 @@
         <div class="section-title"><h2>Minisplit · rankings de uso</h2></div>
 
         <div class="grid-2" style="margin-top:12px;">
-          <div class="panel" data-title="Mayor tiempo de Minisplit encendido" data-ca="CA-08,CA-09,CA-11,CA-20,CA-36,CA-37">
+          <div class="panel" data-title="Mayor tiempo de Minisplit encendido" data-ca="CA-01,CA-02,CA-03,CA-04,CA-05,CA-11,CA-16,CA-21,CA-27">
             <div class="panel-header"><div><h3>Mayor tiempo de Minisplit encendido</h3><div class="subtitle">Estado ON inferido desde Input2</div></div><button class="toggle-inline">Ver CA</button></div>
-            <div class="ca-tags"><span class="chip">CA-08</span><span class="chip">CA-09</span><span class="chip">CA-11</span><span class="chip">CA-20</span><span class="chip">CA-36</span><span class="chip">CA-37</span></div>
+            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-05</span><span class="chip">CA-11</span><span class="chip">CA-16</span><span class="chip">CA-21</span><span class="chip">CA-27</span></div>
             <table><thead><tr><th class="rank-col">#</th><th>Vehículo</th><th>Barra</th><th>Valor</th></tr></thead><tbody>
               <tr><td class="rank-col">1</td><td>RF-102 · Hino 300</td><td><div class="bar"><span class="fill-purple" style="width:100%"></span></div></td><td class="metric-val">38:20:00</td></tr>
               <tr><td class="rank-col">2</td><td>RF-109 · International MV</td><td><div class="bar"><span class="fill-purple" style="width:91%"></span></div></td><td class="metric-val">34:54:00</td></tr>
@@ -297,9 +302,9 @@
             </tbody></table>
           </div>
 
-          <div class="panel" data-title="Minisplit encendido con motor apagado" data-ca="CA-08,CA-09,CA-11,CA-21,CA-25,CA-36,CA-37">
+          <div class="panel" data-title="Minisplit encendido con motor apagado" data-ca="CA-01,CA-02,CA-03,CA-04,CA-05,CA-14,CA-16,CA-17,CA-21,CA-28">
             <div class="panel-header"><div><h3>Minisplit encendido con motor apagado</h3><div class="subtitle">Input2 ON + Ignición OFF</div></div><button class="toggle-inline">Ver CA</button></div>
-            <div class="ca-tags"><span class="chip">CA-08</span><span class="chip">CA-09</span><span class="chip">CA-11</span><span class="chip">CA-21</span><span class="chip">CA-25</span><span class="chip">CA-36</span><span class="chip">CA-37</span></div>
+            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-05</span><span class="chip">CA-14</span><span class="chip">CA-16</span><span class="chip">CA-17</span><span class="chip">CA-21</span><span class="chip">CA-28</span></div>
             <table><thead><tr><th class="rank-col">#</th><th>Vehículo</th><th>Barra</th><th>Valor</th></tr></thead><tbody>
               <tr><td class="rank-col">1</td><td>RF-102 · Hino 300</td><td><div class="bar"><span class="fill-red" style="width:100%"></span></div></td><td class="metric-val">08:42:00</td></tr>
               <tr><td class="rank-col">2</td><td>RF-107 · Isuzu ELF</td><td><div class="bar"><span class="fill-red" style="width:83%"></span></div></td><td class="metric-val">07:10:00</td></tr>
@@ -311,9 +316,9 @@
         </div>
 
         <div class="grid-2">
-          <div class="panel" data-title="Minisplit encendido en ralentí" data-ca="CA-08,CA-09,CA-11,CA-22,CA-24,CA-36,CA-37">
+          <div class="panel" data-title="Minisplit encendido en ralentí" data-ca="CA-01,CA-02,CA-03,CA-04,CA-05,CA-12,CA-16,CA-18,CA-21,CA-29">
             <div class="panel-header"><div><h3>Minisplit encendido en ralentí</h3><div class="subtitle">Input2 ON + Ignición ON + Velocidad &lt; 3 mph</div></div><button class="toggle-inline">Ver CA</button></div>
-            <div class="ca-tags"><span class="chip">CA-08</span><span class="chip">CA-09</span><span class="chip">CA-11</span><span class="chip">CA-22</span><span class="chip">CA-24</span><span class="chip">CA-36</span><span class="chip">CA-37</span></div>
+            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-05</span><span class="chip">CA-12</span><span class="chip">CA-16</span><span class="chip">CA-18</span><span class="chip">CA-21</span><span class="chip">CA-29</span></div>
             <table><thead><tr><th class="rank-col">#</th><th>Vehículo</th><th>Barra</th><th>Valor</th></tr></thead><tbody>
               <tr><td class="rank-col">1</td><td>RF-109 · International MV</td><td><div class="bar"><span class="fill-yellow" style="width:100%"></span></div></td><td class="metric-val">12:26:00</td></tr>
               <tr><td class="rank-col">2</td><td>RF-102 · Hino 300</td><td><div class="bar"><span class="fill-yellow" style="width:96%"></span></div></td><td class="metric-val">11:58:00</td></tr>
@@ -323,9 +328,9 @@
             </tbody></table>
           </div>
 
-          <div class="panel" data-title="Minisplit encendido en movimiento" data-ca="CA-08,CA-09,CA-11,CA-23,CA-26,CA-36,CA-37">
+          <div class="panel" data-title="Minisplit encendido en movimiento" data-ca="CA-01,CA-02,CA-03,CA-04,CA-05,CA-13,CA-16,CA-19,CA-21,CA-30">
             <div class="panel-header"><div><h3>Minisplit encendido en movimiento</h3><div class="subtitle">Input2 ON + Ignición ON + Velocidad ≥ 3 mph</div></div><button class="toggle-inline">Ver CA</button></div>
-            <div class="ca-tags"><span class="chip">CA-08</span><span class="chip">CA-09</span><span class="chip">CA-11</span><span class="chip">CA-23</span><span class="chip">CA-26</span><span class="chip">CA-36</span><span class="chip">CA-37</span></div>
+            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-05</span><span class="chip">CA-13</span><span class="chip">CA-16</span><span class="chip">CA-19</span><span class="chip">CA-21</span><span class="chip">CA-30</span></div>
             <table><thead><tr><th class="rank-col">#</th><th>Vehículo</th><th>Barra</th><th>Valor</th></tr></thead><tbody>
               <tr><td class="rank-col">1</td><td>RF-104 · Freightliner M2</td><td><div class="bar"><span class="fill-blue" style="width:100%"></span></div></td><td class="metric-val">18:02:00</td></tr>
               <tr><td class="rank-col">2</td><td>RF-107 · Isuzu ELF</td><td><div class="bar"><span class="fill-blue" style="width:92%"></span></div></td><td class="metric-val">16:37:00</td></tr>
@@ -338,9 +343,9 @@
 
         <div class="section-title"><h2>Voltaje y temperatura</h2></div>
         <div class="grid-3">
-          <div class="panel" data-title="Voltaje promedio más bajo" data-ca="CA-10,CA-11,CA-27,CA-36">
+          <div class="panel" data-title="Voltaje promedio más bajo" data-ca="CA-01,CA-02,CA-03,CA-04,CA-05,CA-21,CA-31">
             <div class="panel-header"><div><h3>Voltaje promedio más bajo</h3><div class="subtitle">Orden ascendente</div></div><button class="toggle-inline">Ver CA</button></div>
-            <div class="ca-tags"><span class="chip">CA-10</span><span class="chip">CA-11</span><span class="chip">CA-27</span><span class="chip">CA-36</span></div>
+            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-05</span><span class="chip">CA-21</span><span class="chip">CA-31</span></div>
             <table><thead><tr><th class="rank-col">#</th><th>Vehículo</th><th>Valor</th></tr></thead><tbody>
               <tr><td class="rank-col">1</td><td>RF-107 · Isuzu ELF</td><td class="metric-val">11.8 V</td></tr>
               <tr><td class="rank-col">2</td><td>RF-102 · Hino 300</td><td class="metric-val">12.0 V</td></tr>
@@ -350,9 +355,9 @@
             </tbody></table>
           </div>
 
-          <div class="panel" data-title="Voltaje mínimo más bajo" data-ca="CA-10,CA-11,CA-28,CA-36">
+          <div class="panel" data-title="Voltaje mínimo más bajo" data-ca="CA-01,CA-02,CA-03,CA-04,CA-05,CA-21,CA-32">
             <div class="panel-header"><div><h3>Voltaje mínimo más bajo</h3><div class="subtitle">Orden ascendente</div></div><button class="toggle-inline">Ver CA</button></div>
-            <div class="ca-tags"><span class="chip">CA-10</span><span class="chip">CA-11</span><span class="chip">CA-28</span><span class="chip">CA-36</span></div>
+            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-05</span><span class="chip">CA-21</span><span class="chip">CA-32</span></div>
             <table><thead><tr><th class="rank-col">#</th><th>Vehículo</th><th>Valor</th></tr></thead><tbody>
               <tr><td class="rank-col">1</td><td>RF-107 · Isuzu ELF</td><td class="metric-val">10.9 V</td></tr>
               <tr><td class="rank-col">2</td><td>RF-102 · Hino 300</td><td class="metric-val">11.1 V</td></tr>
@@ -362,9 +367,9 @@
             </tbody></table>
           </div>
 
-          <div class="panel" data-title="Voltaje máximo más alto" data-ca="CA-09,CA-11,CA-29,CA-36">
+          <div class="panel" data-title="Voltaje máximo más alto" data-ca="CA-01,CA-02,CA-03,CA-04,CA-05,CA-21,CA-33">
             <div class="panel-header"><div><h3>Voltaje máximo más alto</h3><div class="subtitle">Orden descendente</div></div><button class="toggle-inline">Ver CA</button></div>
-            <div class="ca-tags"><span class="chip">CA-09</span><span class="chip">CA-11</span><span class="chip">CA-29</span><span class="chip">CA-36</span></div>
+            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-05</span><span class="chip">CA-21</span><span class="chip">CA-33</span></div>
             <table><thead><tr><th class="rank-col">#</th><th>Vehículo</th><th>Valor</th></tr></thead><tbody>
               <tr><td class="rank-col">1</td><td>RF-106 · Kenworth T370</td><td class="metric-val">14.5 V</td></tr>
               <tr><td class="rank-col">2</td><td>RF-108 · Hino 500</td><td class="metric-val">14.4 V</td></tr>
@@ -376,9 +381,9 @@
         </div>
 
         <div class="grid-3">
-          <div class="panel" data-title="Temperatura máxima más alta" data-ca="CA-09,CA-11,CA-30,CA-36">
+          <div class="panel" data-title="Temperatura máxima más alta" data-ca="CA-01,CA-02,CA-03,CA-04,CA-05,CA-15,CA-21,CA-34">
             <div class="panel-header"><div><h3>Temperatura máxima más alta</h3><div class="subtitle">Orden descendente</div></div><button class="toggle-inline">Ver CA</button></div>
-            <div class="ca-tags"><span class="chip">CA-09</span><span class="chip">CA-11</span><span class="chip">CA-30</span><span class="chip">CA-36</span></div>
+            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-05</span><span class="chip">CA-15</span><span class="chip">CA-21</span><span class="chip">CA-34</span></div>
             <table><thead><tr><th class="rank-col">#</th><th>Vehículo</th><th>Valor</th></tr></thead><tbody>
               <tr><td class="rank-col">1</td><td>RF-102 · Hino 300</td><td class="metric-val">8.4 °C</td></tr>
               <tr><td class="rank-col">2</td><td>RF-107 · Isuzu ELF</td><td class="metric-val">8.1 °C</td></tr>
@@ -388,9 +393,9 @@
             </tbody></table>
           </div>
 
-          <div class="panel" data-title="Temperatura mínima más baja" data-ca="CA-10,CA-11,CA-31,CA-36">
+          <div class="panel" data-title="Temperatura mínima más baja" data-ca="CA-01,CA-02,CA-03,CA-04,CA-05,CA-21,CA-35">
             <div class="panel-header"><div><h3>Temperatura mínima más baja</h3><div class="subtitle">Orden ascendente</div></div><button class="toggle-inline">Ver CA</button></div>
-            <div class="ca-tags"><span class="chip">CA-10</span><span class="chip">CA-11</span><span class="chip">CA-31</span><span class="chip">CA-36</span></div>
+            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-05</span><span class="chip">CA-21</span><span class="chip">CA-35</span></div>
             <table><thead><tr><th class="rank-col">#</th><th>Vehículo</th><th>Valor</th></tr></thead><tbody>
               <tr><td class="rank-col">1</td><td>RF-108 · Hino 500</td><td class="metric-val">0.7 °C</td></tr>
               <tr><td class="rank-col">2</td><td>RF-106 · Kenworth T370</td><td class="metric-val">1.0 °C</td></tr>
@@ -400,9 +405,9 @@
             </tbody></table>
           </div>
 
-          <div class="panel" data-title="Temperatura promedio más alta" data-ca="CA-09,CA-11,CA-32,CA-36">
+          <div class="panel" data-title="Temperatura promedio más alta" data-ca="CA-01,CA-02,CA-03,CA-04,CA-05,CA-21,CA-36">
             <div class="panel-header"><div><h3>Temperatura promedio más alta</h3><div class="subtitle">Orden descendente</div></div><button class="toggle-inline">Ver CA</button></div>
-            <div class="ca-tags"><span class="chip">CA-09</span><span class="chip">CA-11</span><span class="chip">CA-32</span><span class="chip">CA-36</span></div>
+            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-05</span><span class="chip">CA-21</span><span class="chip">CA-36</span></div>
             <table><thead><tr><th class="rank-col">#</th><th>Vehículo</th><th>Valor</th></tr></thead><tbody>
               <tr><td class="rank-col">1</td><td>RF-102 · Hino 300</td><td class="metric-val">5.8 °C</td></tr>
               <tr><td class="rank-col">2</td><td>RF-109 · International MV</td><td class="metric-val">5.4 °C</td></tr>
@@ -431,37 +436,46 @@
 
   <script>
     const CA_TEXTS = {
-      "CA-01": "Dado que el usuario se encuentra en el dashboard, cuando selecciona una fecha inicial y una fecha final válidas, entonces el dashboard debe actualizar la información usando únicamente los eventos comprendidos dentro de ese periodo.",
-      "CA-03": "Dado que existen datos disponibles para un vehículo dentro del periodo seleccionado, cuando el usuario filtra por ese vehículo, entonces el dashboard debe mostrar únicamente las métricas correspondientes a esa unidad.",
-      "CA-04": "Dado que existen vehículos asociados a un grupo o flotilla, cuando el usuario selecciona dicho grupo o flotilla, entonces el dashboard debe mostrar únicamente las unidades pertenecientes a esa agrupación dentro del periodo seleccionado.",
-      "CA-05": "Dado que el dashboard tiene información cargada, cuando el usuario modifica el rango de fechas, vehículo, grupo o flotilla, entonces todos los rankings y métricas visibles deben actualizarse de acuerdo con los filtros aplicados.",
-      "CA-06": "Dado que el dashboard consulta métricas de uso vehicular, Minisplit, voltaje y temperatura, cuando se generan los datos para un periodo y filtros determinados, entonces el sistema debe usar la misma fuente de información utilizada por el reporte existente.",
-      "CA-07": "Dado que existe un reporte generado para el mismo periodo, vehículo, grupo o flotilla, cuando se comparan sus valores contra el dashboard, entonces los valores calculados deben coincidir con los del reporte para las mismas métricas y filtros.",
-      "CA-08": "Dado que el reporte existente calcula horómetro, odómetro, ralentí, Minisplit, voltaje y temperatura, cuando el dashboard presenta esas métricas, entonces debe aplicar las mismas reglas de cálculo, unidades de medida y criterios de agrupación usados por el reporte.",
-      "CA-09": "Dado que existen datos de múltiples vehículos para una métrica, cuando el dashboard muestra un ranking, entonces las unidades deben ordenarse de mayor a menor según el valor calculado de esa métrica, excepto en métricas donde el criterio sea identificar el valor más bajo.",
-      "CA-10": "Dado que existen métricas cuyo comportamiento crítico corresponde a valores bajos, como voltaje promedio más bajo, voltaje mínimo más bajo o temperatura mínima más baja, cuando el dashboard muestra esos rankings, entonces las unidades deben ordenarse de menor a mayor.",
-      "CA-11": "Dado que el dashboard muestra un ranking, cuando se visualiza cada registro, entonces cada fila o elemento debe incluir posición, nombre del vehículo y valor calculado.",
-      "CA-13": "Dado que existen datos de horómetro para varios vehículos, cuando el usuario consulta el ranking de horómetro recorrido, entonces el dashboard debe mostrar las unidades ordenadas de mayor a menor según el horómetro recorrido en el periodo seleccionado.",
-      "CA-15": "Dado que existen datos de odómetro o distancia para varios vehículos, cuando el usuario consulta el ranking de kilometraje recorrido, entonces el dashboard debe mostrar las unidades ordenadas de mayor a menor según la distancia recorrida en el periodo seleccionado.",
-      "CA-16": "Dado que existe distancia recorrida dentro del periodo seleccionado, cuando el usuario consulta la métrica de distancia recorrida por día, entonces el dashboard debe calcular y mostrar el promedio diario de distancia por vehículo usando los días calendario del rango filtrado.",
-      "CA-18": "Dado que existen datos de horas de trabajo por vehículo, cuando el usuario consulta el ranking de horas de trabajo, entonces el dashboard debe mostrar las unidades ordenadas de mayor a menor según las horas calculadas en el periodo seleccionado. Estas horas corresponden a las horas marcadas por el horómetro y ya calculadas en el reporte.",
-      "CA-19": "Dado que existen eventos de ignición y velocidad para los vehículos, cuando el usuario consulta el ranking de ralentí, entonces el dashboard debe mostrar las unidades ordenadas de mayor a menor según el tiempo total en ralentí dentro del periodo seleccionado.",
-      "CA-20": "Dado que existen eventos de estado del Minisplit para los vehículos, cuando el usuario consulta el ranking de Minisplit encendido, entonces el dashboard debe mostrar las unidades ordenadas de mayor a menor según el tiempo total de Minisplit encendido.",
-      "CA-21": "Dado que existen eventos de Minisplit e ignición, cuando el Minisplit está encendido y la ignición está apagada, entonces ese tiempo debe contabilizarse como “Minisplit encendido con unidad apagada”.",
-      "CA-22": "Dado que existen eventos de Minisplit, ignición y velocidad, cuando el Minisplit está encendido, la ignición está encendida y la velocidad es menor a 3 mph, entonces ese tiempo debe contabilizarse como “Minisplit encendido en ralentí”.",
-      "CA-23": "Dado que existen eventos de Minisplit, ignición y velocidad, cuando el Minisplit está encendido, la ignición está encendida y la velocidad es mayor o igual a 3 mph, entonces ese tiempo debe contabilizarse como “Minisplit encendido en viaje”.",
-      "CA-24": "Dado que existen tiempos calculados de Minisplit encendido en ralentí, cuando el usuario consulta este ranking, entonces el dashboard debe mostrar las unidades ordenadas de mayor a menor según el tiempo de Minisplit encendido en ralentí.",
-      "CA-25": "Dado que existen tiempos calculados de Minisplit encendido con unidad apagada, cuando el usuario consulta este ranking, entonces el dashboard debe mostrar las unidades ordenadas de mayor a menor según el tiempo de Minisplit encendido con la ignición apagada.",
-      "CA-26": "Dado que existen tiempos calculados de Minisplit encendido en viaje, cuando el usuario consulta este ranking, entonces el dashboard debe mostrar las unidades ordenadas de mayor a menor según el tiempo de Minisplit encendido en movimiento.",
-      "CA-27": "Dado que existen lecturas de voltaje para varios vehículos, cuando el usuario consulta el ranking de voltaje promedio más bajo, entonces el dashboard debe mostrar las unidades ordenadas de menor a mayor según el voltaje promedio del periodo.",
-      "CA-28": "Dado que existen lecturas de voltaje para varios vehículos, cuando el usuario consulta el ranking de voltaje mínimo más bajo, entonces el dashboard debe mostrar las unidades ordenadas de menor a mayor según el voltaje mínimo registrado en el periodo.",
-      "CA-29": "Dado que existen lecturas de voltaje para varios vehículos, cuando el usuario consulta el ranking de voltaje máximo más alto, entonces el dashboard debe mostrar las unidades ordenadas de mayor a menor según el voltaje máximo registrado en el periodo.",
-      "CA-30": "Dado que existen lecturas de temperatura para varios vehículos, cuando el usuario consulta el ranking de temperatura máxima más alta, entonces el dashboard debe mostrar las unidades ordenadas de mayor a menor según la temperatura máxima registrada en el periodo.",
-      "CA-31": "Dado que existen lecturas de temperatura para varios vehículos, cuando el usuario consulta el ranking de temperatura mínima más baja, entonces el dashboard debe mostrar las unidades ordenadas de menor a mayor según la temperatura mínima registrada en el periodo.",
-      "CA-32": "Dado que existen lecturas de temperatura para varios vehículos, cuando el usuario consulta el ranking de temperatura promedio más alta, entonces el dashboard debe mostrar las unidades ordenadas de mayor a menor según la temperatura promedio del periodo.",
-      "CA-36": "Dado que el dashboard muestra valores de tiempo, distancia, voltaje y temperatura, cuando se visualizan las métricas, entonces cada valor debe presentarse con su unidad de medida correspondiente, como horas, kilómetros o millas, voltios y grados de temperatura, según aplique al reporte existente.",
-      "CA-37": "Dado que el dashboard calcula métricas de uso de Minisplit, cuando evalúa si el Minisplit se encuentra encendido o apagado, entonces debe utilizar el Input2 del dispositivo GPS como fuente de estado."
-    };
+      "CA-01": "Dado que el usuario se encuentra en el dashboard, cuando selecciona una fecha inicial y una fecha final válidas, entonces el dashboard debe cargar la información usando únicamente los eventos comprendidos dentro de ese periodo.",
+      "CA-02": "Dado que existen grupos o flotillas disponibles para el usuario, cuando selecciona un grupo o flotilla, entonces el dashboard debe mostrar únicamente los vehículos pertenecientes a esa agrupación dentro del periodo seleccionado.",
+      "CA-03": "Dado que existen vehículos disponibles para el usuario, cuando selecciona un vehículo individual, entonces el dashboard debe mostrar únicamente las métricas calculadas para ese vehículo dentro del periodo seleccionado.",
+      "CA-04": "Dado que el usuario modifica el rango de fechas, grupo, flotilla o vehículo, cuando ejecuta la consulta o recarga el dashboard, entonces todos los cuadros de resumen y rankings deben actualizarse de acuerdo con los filtros aplicados.",
+      "CA-05": "Dado que el dashboard presenta métricas provenientes del reporte existente, cuando se calculan los valores para un mismo periodo, vehículo, grupo o flotilla, entonces el sistema debe usar la misma fuente de información, lógica de cálculo, unidades de medida y criterios de agrupación del reporte.",
+      "CA-06": "Dado que el dashboard carga información para el periodo seleccionado, cuando se visualiza el encabezado de resumen, entonces debe mostrar cuadros consolidados para vehículos analizados, distancia total, horas de trabajo total, ralentí total, Minisplit encendido total, Minisplit en ralentí, Minisplit en movimiento, Minisplit con motor apagado y temperatura máxima global.",
+      "CA-07": "Dado que el dashboard muestra el cuadro de vehículos analizados, cuando se aplican los filtros, entonces el valor debe corresponder a la cantidad de vehículos incluidos en la consulta y considerados para los cálculos del dashboard.",
+      "CA-08": "Dado que el dashboard muestra el cuadro de distancia total, cuando se aplican los filtros, entonces el valor debe corresponder a la suma de la distancia recorrida por los vehículos incluidos en el periodo seleccionado.",
+      "CA-09": "Dado que el dashboard muestra el cuadro de horas de trabajo total, cuando se aplican los filtros, entonces el valor debe corresponder a la suma de las horas marcadas por el horómetro de los vehículos, ya calculadas en el reporte.",
+      "CA-10": "Dado que el dashboard muestra el cuadro de ralentí total, cuando se aplican los filtros, entonces el valor debe corresponder a la suma del tiempo en ralentí de los vehículos incluidos en el periodo seleccionado.",
+      "CA-11": "Dado que el dashboard muestra el cuadro de Minisplit encendido total, cuando se aplican los filtros, entonces el valor debe corresponder a la suma del tiempo en que el Minisplit estuvo encendido según Input2 del dispositivo GPS.",
+      "CA-12": "Dado que el dashboard muestra el cuadro de Minisplit en ralentí, cuando se aplican los filtros, entonces el valor debe corresponder a la suma del tiempo con Input2 encendido, ignición encendida y velocidad menor a 3 mph.",
+      "CA-13": "Dado que el dashboard muestra el cuadro de Minisplit en movimiento, cuando se aplican los filtros, entonces el valor debe corresponder a la suma del tiempo con Input2 encendido, ignición encendida y velocidad mayor o igual a 3 mph.",
+      "CA-14": "Dado que el dashboard muestra el cuadro de Minisplit con motor apagado, cuando se aplican los filtros, entonces el valor debe corresponder a la suma del tiempo con Input2 encendido e ignición apagada.",
+      "CA-15": "Dado que el dashboard muestra el cuadro de temperatura máxima global, cuando se aplican los filtros, entonces el valor debe corresponder a la temperatura máxima registrada entre los vehículos incluidos en el periodo seleccionado.",
+      "CA-16": "Dado que el dashboard calcula métricas de Minisplit, cuando evalúa si el Minisplit está encendido o apagado, entonces debe utilizar el Input2 del dispositivo GPS como fuente de estado.",
+      "CA-17": "Dado que el Minisplit está encendido según Input2 y la ignición está apagada, cuando el sistema calcula los tiempos del periodo, entonces ese intervalo debe contabilizarse como Minisplit encendido con motor apagado.",
+      "CA-18": "Dado que el Minisplit está encendido según Input2, la ignición está encendida y la velocidad es menor a 3 mph, cuando el sistema calcula los tiempos del periodo, entonces ese intervalo debe contabilizarse como Minisplit encendido en ralentí.",
+      "CA-19": "Dado que el Minisplit está encendido según Input2, la ignición está encendida y la velocidad es mayor o igual a 3 mph, cuando el sistema calcula los tiempos del periodo, entonces ese intervalo debe contabilizarse como Minisplit encendido en movimiento.",
+      "CA-20": "Dado que el dashboard calcula distancia recorrida por día, cuando se aplica un rango de fechas, entonces el valor debe obtenerse dividiendo la distancia recorrida entre la cantidad de días calendario del rango seleccionado.",
+      "CA-21": "Dado que el dashboard muestra un ranking, cuando se visualiza cada fila del ranking, entonces debe incluir posición, nombre del vehículo y valor calculado con su unidad de medida correspondiente.",
+      "CA-22": "Dado que existen datos de horómetro recorrido para varios vehículos, cuando el dashboard muestra el cuadro de mayor horómetro recorrido, entonces debe ordenar los vehículos de mayor a menor según el horómetro recorrido en el periodo seleccionado.",
+      "CA-23": "Dado que existen datos de kilometraje recorrido para varios vehículos, cuando el dashboard muestra el cuadro de mayor kilometraje recorrido, entonces debe ordenar los vehículos de mayor a menor según la distancia recorrida en el periodo seleccionado.",
+      "CA-24": "Dado que existen datos de distancia recorrida para varios vehículos, cuando el dashboard muestra el cuadro de distancia recorrida por día, entonces debe ordenar los vehículos de mayor a menor según la distancia promedio diaria calculada por días calendario.",
+      "CA-25": "Dado que existen horas de trabajo calculadas por horómetro para varios vehículos, cuando el dashboard muestra el cuadro de horas de trabajo por unidad, entonces debe ordenar los vehículos de mayor a menor según las horas de trabajo del periodo seleccionado.",
+      "CA-26": "Dado que existen tiempos de ralentí para varios vehículos, cuando el dashboard muestra el cuadro de mayor tiempo de ralentí, entonces debe ordenar los vehículos de mayor a menor según el tiempo total en ralentí del periodo seleccionado.",
+      "CA-27": "Dado que existen tiempos de Minisplit encendido para varios vehículos, cuando el dashboard muestra el cuadro de mayor tiempo de Minisplit encendido, entonces debe ordenar los vehículos de mayor a menor según el tiempo total con Minisplit encendido.",
+      "CA-28": "Dado que existen tiempos de Minisplit encendido con motor apagado para varios vehículos, cuando el dashboard muestra ese cuadro, entonces debe ordenar los vehículos de mayor a menor según el tiempo con Input2 encendido e ignición apagada.",
+      "CA-29": "Dado que existen tiempos de Minisplit encendido en ralentí para varios vehículos, cuando el dashboard muestra ese cuadro, entonces debe ordenar los vehículos de mayor a menor según el tiempo con Input2 encendido, ignición encendida y velocidad menor a 3 mph.",
+      "CA-30": "Dado que existen tiempos de Minisplit encendido en movimiento para varios vehículos, cuando el dashboard muestra ese cuadro, entonces debe ordenar los vehículos de mayor a menor según el tiempo con Input2 encendido, ignición encendida y velocidad mayor o igual a 3 mph.",
+      "CA-31": "Dado que existen lecturas de voltaje para varios vehículos, cuando el dashboard muestra el cuadro de voltaje promedio más bajo, entonces debe ordenar los vehículos de menor a mayor según el voltaje promedio del periodo.",
+      "CA-32": "Dado que existen lecturas de voltaje para varios vehículos, cuando el dashboard muestra el cuadro de voltaje mínimo más bajo, entonces debe ordenar los vehículos de menor a mayor según el voltaje mínimo registrado en el periodo.",
+      "CA-33": "Dado que existen lecturas de voltaje para varios vehículos, cuando el dashboard muestra el cuadro de voltaje máximo más alto, entonces debe ordenar los vehículos de mayor a menor según el voltaje máximo registrado en el periodo.",
+      "CA-34": "Dado que existen lecturas de temperatura para varios vehículos, cuando el dashboard muestra el cuadro de temperatura máxima más alta, entonces debe ordenar los vehículos de mayor a menor según la temperatura máxima registrada en el periodo.",
+      "CA-35": "Dado que existen lecturas de temperatura para varios vehículos, cuando el dashboard muestra el cuadro de temperatura mínima más baja, entonces debe ordenar los vehículos de menor a mayor según la temperatura mínima registrada en el periodo.",
+      "CA-36": "Dado que existen lecturas de temperatura para varios vehículos, cuando el dashboard muestra el cuadro de temperatura promedio más alta, entonces debe ordenar los vehículos de mayor a menor según la temperatura promedio del periodo.",
+      "CA-37": "Dado que no existen datos disponibles para una métrica dentro del periodo y filtros seleccionados, cuando el dashboard intenta mostrar el cuadro correspondiente, entonces debe presentar un estado claro de sin datos y evitar mostrar valores calculados incorrectamente.",
+      "CA-38": "Dado que el usuario consulta el dashboard con múltiples cuadros visibles, cuando aplica filtros o recarga la información, entonces la interfaz debe permitir visualizar la información sin bloquear la navegación ni impedir la interacción del usuario.",
+      "CA-39": "Dado que el usuario activa la opción de mostrar criterios de aceptación en el mockup, cuando selecciona un cuadro o la opción global, entonces debe mostrarse una barra lateral derecha con los criterios relacionados escritos completos; al ocultarlos, la barra lateral debe desaparecer."
+};
 
     const sidebar = document.getElementById('caSidebar');
     const sidebarBody = document.getElementById('sidebarBody');
@@ -508,6 +522,21 @@
       document.querySelectorAll('.ca-tags').forEach(el => el.classList.add('visible'));
       document.querySelectorAll('.toggle-inline').forEach(btn => btn.textContent = 'Ver CA');
       globalBtn.textContent = 'Ocultar CA';
+    });
+
+
+    document.querySelectorAll('.ca-trigger').forEach(trigger => {
+      trigger.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const ids = trigger.dataset.ca.split(',').map(x => x.trim());
+        renderCriteria(ids, trigger.dataset.title || 'Criterios de aceptación', trigger.dataset.subtitle || 'Criterios relacionados con este elemento del dashboard.');
+        document.querySelectorAll('.ca-tags').forEach(el => el.classList.remove('visible'));
+        document.querySelectorAll('.toggle-inline').forEach(b => {
+          if(!b.classList.contains('ca-trigger')) b.textContent = 'Ver CA';
+        });
+        globalBtn.textContent = 'Mostrar CA';
+      });
     });
 
     document.querySelectorAll('.panel').forEach(panel => {
