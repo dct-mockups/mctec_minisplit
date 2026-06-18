@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mockup Dashboard Minisplit con Heatmaps</title>
+  <style>
+    :root{
+      --blue:#0f4c97;
+      --blue2:#4b74d9;
+      --green:#58b548;
+      --orange:#ff8c2a;
+      --yellow:#e6c436;
+      --red:#e65252;
+      --purple:#9553d1;
+      --dark:#273140;
+      --bg:#eef1f4;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --line:#d8dde5;
+      --chip:#eef4ff;
+      --chipText:#194a9b;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text)}
+    .topbar{position:sticky;top:0;z-index:20;background:var(--blue);color:#fff;padding:14px 18px;font-size:18px;font-weight:600;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+    .topbar .title{display:flex;align-items:center;gap:12px}
+    .burger{font-size:24px;line-height:1}
+    .page{display:flex;align-items:flex-start}
+    .main{flex:1;min-width:0}
+    .sidebar{width:0;overflow:hidden;position:sticky;top:58px;height:calc(100vh - 58px);background:#ffffff;border-left:1px solid var(--line);box-shadow:-2px 0 10px rgba(0,0,0,.05);transition:width .25s ease;z-index:10}
+    .sidebar.open{width:390px}
+    .sidebar-inner{width:390px;height:100%;display:flex;flex-direction:column}
+    .sidebar-header{padding:16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .sidebar-header h3{margin:0;font-size:18px;color:#173f7e}
+    .sidebar-header .close-btn{border:none;background:#eef4ff;color:#173f7e;font-weight:700;border-radius:8px;padding:8px 10px;cursor:pointer}
+    .sidebar-subtitle{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.4}
+    .sidebar-body{padding:14px 16px 22px;overflow:auto}
+    .criterion{border:1px solid #d9e3ef;border-radius:10px;padding:12px;margin-bottom:10px;background:#f9fbfd}
+    .criterion h4{margin:0 0 6px 0;color:#173f7e;font-size:14px}
+    .criterion p{margin:0;color:#445063;font-size:13px;line-height:1.45}
+
+    .container{padding:18px}
+    .filters{display:grid;grid-template-columns:2fr 2fr 1.2fr auto auto;gap:12px;align-items:end;margin-bottom:16px}
+    .field{background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+    .field label{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:.03em}
+    .field select,.field input{width:100%;border:none;outline:none;font-size:15px;background:transparent;color:var(--text)}
+    .btn{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:12px 16px;font-weight:700;cursor:pointer}
+    .btn.secondary{background:#fff;color:var(--blue);border:1px solid var(--blue)}
+    .hero{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:18px}
+    .hero h1{margin:0 0 8px 0;font-size:34px;color:#173f7e}
+    .hero p{margin:4px 0;color:#465162;max-width:900px;line-height:1.4}
+    .legend-box{min-width:340px;background:#f7f9fc;border:1px dashed #c8d2e0;border-radius:10px;padding:14px}
+    .legend-box h3{margin:0 0 10px;font-size:16px;color:#173f7e}
+    .legend-box ul{margin:0;padding-left:18px}
+    .legend-box li{margin:6px 0;color:#465162;font-size:14px}
+    .small{font-size:12px;color:var(--muted)}
+    .section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:20px 0 10px}
+    .section-title h2{margin:0;font-size:24px;color:#173f7e}
+    .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+    .kpi-card{position:relative;color:#fff;padding:14px;border-radius:10px;min-height:116px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+    .kpi-card h3{margin:0;font-size:15px;font-weight:700;opacity:.95}
+    .kpi-card .value{font-size:40px;font-weight:800;line-height:1.05}
+    .kpi-card .sub{font-size:13px;opacity:.95}
+    .dark{background:linear-gradient(135deg,#2f3948,#232a35)}
+    .blue{background:linear-gradient(135deg,#1b4dd6,#2d69d6)}
+    .green{background:linear-gradient(135deg,#38c61f,#58b548)}
+    .yellow{background:linear-gradient(135deg,#f2dc3b,#e6b626);color:#111827}
+    .orange{background:linear-gradient(135deg,#ff9628,#ff5a1f)}
+    .purple{background:linear-gradient(135deg,#8f51d8,#b15cd6)}
+    .red{background:linear-gradient(135deg,#e54c65,#e73d3d)}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+    .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px}
+    .panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+    .panel-header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px}
+    .panel h3{margin:0;font-size:18px;color:#202938}
+    .panel .subtitle{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.4}
+    .toggle-inline{background:#f3f6fb;border:1px solid #cad5e4;color:#173f7e;padding:8px 10px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
+    .ca-mini-btn{border:1px solid #c9dafb;background:#eef4ff;color:#173f7e;border-radius:999px;padding:3px 7px;font-size:10px;font-weight:800;cursor:pointer;letter-spacing:0;text-transform:none;line-height:1}
+    .kpi-card .ca-mini-btn{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.92);border-color:rgba(255,255,255,.7);color:#173f7e}
+    .yellow .ca-mini-btn{background:rgba(255,255,255,.88);color:#173f7e;border-color:rgba(255,255,255,.7)}
+    .ca-tags{display:none;gap:6px;flex-wrap:wrap;margin:0 0 10px 0}
+    .ca-tags.visible{display:flex}
+    .chip{background:var(--chip);color:var(--chipText);font-size:12px;padding:4px 8px;border-radius:999px;font-weight:700;border:1px solid #c9dafb}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px 8px;border-bottom:1px solid #edf1f5;font-size:14px;text-align:left;vertical-align:middle}
+    th{color:#4b5563;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+    tr:last-child td{border-bottom:none}
+    .rank-col{width:48px;font-weight:800;color:#173f7e}
+    .bar{height:18px;background:#e9edf4;border-radius:999px;position:relative;flex:1;overflow:hidden}
+    .bar > span{position:absolute;left:0;top:0;bottom:0;border-radius:999px}
+    .fill-blue{background:linear-gradient(90deg,#80a3ff,#2d69d6)}
+    .fill-green{background:linear-gradient(90deg,#b6d7a8,#67b56c)}
+    .fill-yellow{background:linear-gradient(90deg,#f5df71,#d8b11d)}
+    .fill-purple{background:linear-gradient(90deg,#d0b1ff,#995bd6)}
+    .fill-red{background:linear-gradient(90deg,#ffb4bf,#e65252)}
+    .fill-orange{background:linear-gradient(90deg,#ffc280,#ff7c25)}
+    .metric-val{min-width:96px;text-align:right;font-weight:700;color:#243142}
+
+    .map-wrap{background:#f8fafc;border:1px solid #d8e1eb;border-radius:12px;padding:10px}
+    .map-legend{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px;flex-wrap:wrap}
+    .legend-scale{display:flex;align-items:center;gap:8px}
+    .scale-bar{width:160px;height:12px;border-radius:999px;background:linear-gradient(90deg,#d2efff 0%, #66b7ff 35%, #ffb347 68%, #ff4d4f 100%);border:1px solid #c9d4e2}
+    .legend-note{font-size:12px;color:var(--muted)}
+    .map-list{margin-top:10px;border-top:1px dashed #d7dfeb;padding-top:10px}
+    .map-list div{font-size:13px;color:#465162;margin:5px 0}
+    .mx-map{width:100%;height:auto;display:block}
+    .mx-outline{fill:#e6edf5;stroke:#c5d0de;stroke-width:2}
+    .mx-hot{mix-blend-mode:multiply}
+    .pin{fill:#1f5fbf;stroke:#fff;stroke-width:2}
+    .pin-label{font-size:11px;fill:#334155;font-weight:700}
+
+    @media (max-width:1500px){.kpi-grid{grid-template-columns:repeat(3,1fr)}}
+    @media (max-width:1350px){.grid-3{grid-template-columns:1fr 1fr}.sidebar.open{width:360px}.sidebar-inner{width:360px}}
+    @media (max-width:1200px){.filters{grid-template-columns:1fr 1fr}.grid-2,.hero{display:grid;grid-template-columns:1fr}.kpi-grid{grid-template-columns:repeat(2,1fr)}.legend-box{min-width:0}.sidebar{display:none}}
+    @media (max-width:700px){.kpi-grid,.grid-2,.grid-3{grid-template-columns:1fr}.container{padding:10px}.hero h1{font-size:28px}.filters{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="title"><span class="burger">☰</span> <span>Tablero · Dashboard Uso Vehicular y Minisplit</span></div>
+    <div>🔔 ⚙️</div>
+  </div>
+
+  <div class="page">
+    <main class="main">
+      <div class="container">
+        <div class="filters">
+          <div class="field">
+            <label>Grupo / Flotilla <button class="ca-mini-btn ca-trigger" data-ca="CA-02,CA-04,CA-05" data-title="Filtro por grupo / flotilla" data-subtitle="Criterios relacionados con el selector superior de grupo o flotilla.">CA</button></label>
+            <select>
+              <option>Todas las flotillas</option>
+              <option selected>Refrigerados Norte</option>
+              <option>Última Milla Frío</option>
+              <option>Distribución Occidente</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Vehículo <button class="ca-mini-btn ca-trigger" data-ca="CA-03,CA-04,CA-05" data-title="Filtro por vehículo" data-subtitle="Criterios relacionados con el selector superior de vehículo individual.">CA</button></label>
+            <select>
+              <option selected>Todos los vehículos</option>
+              <option>RF-101 · Isuzu Forward</option>
+              <option>RF-102 · Hino 300</option>
+              <option>RF-103 · Freightliner M2</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Periodo <button class="ca-mini-btn ca-trigger" data-ca="CA-01,CA-04,CA-05" data-title="Filtro por periodo" data-subtitle="Criterios relacionados con el rango de fechas personalizado.">CA</button></label>
+            <input value="Junio 01 - Junio 15, 2026" />
+          </div>
+          <button class="btn ca-trigger" data-ca="CA-04,CA-36" data-title="Recarga / actualización del dashboard" data-subtitle="Criterios relacionados con la actualización dinámica de todos los cuadros al ejecutar la consulta.">RECARGAR</button>
+          <button id="toggleAllCa" class="btn secondary">Mostrar CA</button>
+        </div>
+
+        <div class="hero">
+          <div>
+            <h1>Evolución Operativa de Minisplit y Uso Vehicular</h1>
+            <p>Mockup funcional basado en el reporte existente. Muestra rankings comparativos de <strong>horómetro</strong>, <strong>odómetro</strong>, <strong>ralentí</strong>, <strong>Minisplit</strong> y una vista geográfica de calor sobre México para identificar concentración de eventos.</p>
+            <p class="small">Datos simulados para <strong>10 vehículos</strong>. Objetivo: validar estructura del dashboard, cobertura de criterios de aceptación y el reemplazo de la sección de voltaje/temperatura por mapas de calor geográficos.</p>
+          </div>
+          <div class="legend-box">
+            <h3>Reglas visibles en el mockup</h3>
+            <ul>
+              <li><strong>Minisplit ON/OFF</strong> se determina con <strong>Input2</strong> del GPS.</li>
+              <li><strong>Minisplit con motor apagado</strong> = Input2 ON + Ignición OFF.</li>
+              <li><strong>Minisplit en ralentí</strong> = Input2 ON + Ignición ON + Velocidad &lt; 3 mph.</li>
+              <li><strong>Minisplit en movimiento</strong> = Input2 ON + Ignición ON + Velocidad ≥ 3 mph.</li>
+              <li><strong>Ralentí</strong> = Ignición ON + Velocidad &lt; 3 mph.</li>
+              <li><strong>Distancia por día</strong> = distancia total / días calendario del rango seleccionado.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="section-title"><h2>Resumen del periodo</h2><button class="toggle-inline ca-trigger" data-ca="CA-06,CA-07,CA-08,CA-09,CA-10,CA-11,CA-12,CA-13,CA-14" data-title="Header / resumen del periodo" data-subtitle="Criterios relacionados con los cuadros superiores de resumen.">Ver CA del resumen</button></div>
+        <div class="kpi-grid">
+          <div class="kpi-card dark"><button class="ca-mini-btn ca-trigger" data-ca="CA-06,CA-07" data-title="Cuadro de vehículos analizados" data-subtitle="Criterios relacionados con este cuadro del resumen superior.">CA</button><h3>Vehículos analizados</h3><div class="value">10</div><div class="sub">Flotilla: Refrigerados Norte</div></div>
+          <div class="kpi-card blue"><button class="ca-mini-btn ca-trigger" data-ca="CA-06,CA-08" data-title="Cuadro de distancia total" data-subtitle="Criterios relacionados con este cuadro del resumen superior.">CA</button><h3>Distancia total</h3><div class="value">14,820</div><div class="sub">km recorridos</div></div>
+          <div class="kpi-card green"><button class="ca-mini-btn ca-trigger" data-ca="CA-06,CA-09" data-title="Cuadro de horas de trabajo total" data-subtitle="Criterios relacionados con este cuadro del resumen superior.">CA</button><h3>Horas de trabajo total</h3><div class="value">612</div><div class="sub">hrs · suma del horómetro</div></div>
+          <div class="kpi-card yellow"><button class="ca-mini-btn ca-trigger" data-ca="CA-06,CA-10" data-title="Cuadro de ralentí total" data-subtitle="Criterios relacionados con este cuadro del resumen superior.">CA</button><h3>Ralentí total</h3><div class="value">94.6</div><div class="sub">hrs</div></div>
+          <div class="kpi-card purple"><button class="ca-mini-btn ca-trigger" data-ca="CA-06,CA-11,CA-15" data-title="Cuadro de Minisplit encendido total" data-subtitle="Criterios relacionados con este cuadro del resumen superior.">CA</button><h3>Minisplit ON total</h3><div class="value">286.4</div><div class="sub">hrs</div></div>
+          <div class="kpi-card red"><button class="ca-mini-btn ca-trigger" data-ca="CA-06,CA-12,CA-15,CA-17" data-title="Cuadro de Minisplit en ralentí" data-subtitle="Criterios relacionados con este cuadro del resumen superior.">CA</button><h3>Minisplit en ralentí</h3><div class="value">91.5</div><div class="sub">hrs</div></div>
+          <div class="kpi-card orange"><button class="ca-mini-btn ca-trigger" data-ca="CA-06,CA-13,CA-15,CA-18" data-title="Cuadro de Minisplit en movimiento" data-subtitle="Criterios relacionados con este cuadro del resumen superior.">CA</button><h3>Minisplit en movimiento</h3><div class="value">142.1</div><div class="sub">hrs</div></div>
+          <div class="kpi-card dark"><button class="ca-mini-btn ca-trigger" data-ca="CA-06,CA-14,CA-15,CA-16" data-title="Cuadro de Minisplit con motor apagado" data-subtitle="Criterios relacionados con este cuadro del resumen superior.">CA</button><h3>Minisplit con motor apagado</h3><div class="value">52.8</div><div class="sub">hrs</div></div>
+        </div>
+
+        <div class="grid-3">
+          <div class="panel" data-title="Mayor horómetro recorrido" data-ca="CA-01,CA-02,CA-03,CA-04,CA-05,CA-20,CA-21">
+            <div class="panel-header"><div><h3>Mayor horómetro recorrido</h3><div class="subtitle">Top 10 · orden descendente</div></div><button class="toggle-inline">Ver CA</button></div>
+            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-05</span><span class="chip">CA-20</span><span class="chip">CA-21</span></div>
+            <table><thead><tr><th class="rank-col">#</th><th>Vehículo</th><th>Visual</th><th>Valor</th></tr></thead><tbody>
+              <tr><td class="rank-col">1</td><td>RF-104 · Freightliner M2</td><td><div class="bar"><span class="fill-green" style="width:100%"></span></div></td><td class="metric-val">89.4 hrs</td></tr>
+              <tr><td class="rank-col">2</td><td>RF-108 · Hino 500</td><td><div class="bar"><span class="fill-green" style="width:93%"></span></div></td><td class="metric-val">83.1 hrs</td></tr>
+              <tr><td class="rank-col">3</td><td>RF-101 · Isuzu Forward</td><td><div class="bar"><span class="fill-green" style="width:86%"></span></div></td><td class="metric-val">76.8 hrs</td></tr>
+              <tr><td class="rank-col">4</td><td>RF-106 · Kenworth T370</td><td><div class="bar"><span class="fill-green" style="width:81%"></span></div></td><td class="metric-val">72.6 hrs</td></tr>
+              <tr><td class="rank-col">5</td><td>RF-103 · Freightliner M2</td><td><div class="bar"><span class="fill-green" style="width:78%"></span></div></td><td class="metric-val">69.7 hrs</td></tr>
+            </tbody></table>
+          </div>
+
+          <div class="panel" data-title="Mayor kilometraje recorrido" data-ca="CA-01,CA-02,CA-03,CA-04,CA-05,CA-20,CA-22">
+            <div class="panel-header"><div><h3>Mayor kilometraje recorrido</h3><div class="subtitle">Top 10 · orden descendente</div></div><button class="toggle-inline">Ver CA</button></div>
+            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-05</span><span class="chip">CA-20</span><span class="chip">CA-22</span></div>
+            <table><thead><tr><th class="rank-col">#</th><th>Vehículo</th><th>Visual</th><th>Valor</th></tr></thead><tbody>
+              <tr><td class="rank-col">1</td><td>RF-108 · Hino 500</td><td><div class="bar"><span class="fill-blue" style="width:100%"></span></div></td><td class="metric-val">2,180 km</td></tr>
+              <tr><td class="rank-col">2</td><td>RF-101 · Isuzu Forward</td><td><div class="bar"><span class="fill-blue" style="width:92%"></span></div></td><td class="metric-val">2,005 km</td></tr>
+              <tr><td class="rank-col">3</td><td>RF-104 · Freightliner M2</td><td><div class="bar"><span class="fill-blue" style="width:87%"></span></div></td><td class="metric-val">1,894 km</td></tr>
+              <tr><td class="rank-col">4</td><td>RF-103 · Freightliner M2</td><td><div class="bar"><span class="fill-blue" style="width:82%"></span></div></td><td class="metric-val">1,785 km</td></tr>
+              <tr><td class="rank-col">5</td><td>RF-106 · Kenworth T370</td><td><div class="bar"><span class="fill-blue" style="width:75%"></span></div></td><td class="metric-val">1,640 km</td></tr>
+            </tbody></table>
+          </div>
+
+          <div class="panel" data-title="Distancia recorrida por día" data-ca="CA-01,CA-02,CA-03,CA-04,CA-05,CA-19,CA-20,CA-23">
+            <div class="panel-header"><div><h3>Distancia recorrida por día</h3><div class="subtitle">Promedio diario por unidad · días calendario del rango</div></div><button class="toggle-inline">Ver CA</button></div>
+            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-05</span><span class="chip">CA-19</span><span class="chip">CA-20</span><span class="chip">CA-23</span></div>
+            <table><thead><tr><th class="rank-col">#</th><th>Vehículo</th><th>Visual</th><th>Valor</th></tr></thead><tbody>
+              <tr><td class="rank-col">1</td><td>RF-108 · Hino 500</td><td><div class="bar"><span class="fill-orange" style="width:100%"></span></div></td><td class="metric-val">145.3 km/día</td></tr>
+              <tr><td class="rank-col">2</td><td>RF-101 · Isuzu Forward</td><td><div class="bar"><span class="fill-orange" style="width:92%"></span></div></td><td class="metric-val">133.7 km/día</td></tr>
+              <tr><td class="rank-col">3</td><td>RF-104 · Freightliner M2</td><td><div class="bar"><span class="fill-orange" style="width:87%"></span></div></td><td class="metric-val">126.3 km/día</td></tr>
+              <tr><td class="rank-col">4</td><td>RF-103 · Freightliner M2</td><td><div class="bar"><span class="fill-orange" style="width:82%"></span></div></td><td class="metric-val">119.0 km/día</td></tr>
+              <tr><td class="rank-col">5</td><td>RF-106 · Kenworth T370</td><td><div class="bar"><span class="fill-orange" style="width:75%"></span></div></td><td class="metric-val">109.3 km/día</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="panel" data-title="Horas de trabajo por unidad" data-ca="CA-01,CA-02,CA-03,CA-04,CA-05,CA-09,CA-20,CA-24">
+            <div class="panel-header"><div><h3>Horas de trabajo por unidad</h3><div class="subtitle">Valor tomado del reporte · corresponde a las horas marcadas por el horómetro</div></div><button class="toggle-inline">Ver CA</button></div>
+            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-05</span><span class="chip">CA-09</span><span class="chip">CA-20</span><span class="chip">CA-24</span></div>
+            <table><thead><tr><th class="rank-col">#</th><th>Vehículo</th><th>Barra</th><th>Valor</th></tr></thead><tbody>
+              <tr><td class="rank-col">1</td><td>RF-104 · Freightliner M2</td><td><div class="bar"><span class="fill-green" style="width:100%"></span></div></td><td class="metric-val">78:10:00</td></tr>
+              <tr><td class="rank-col">2</td><td>RF-101 · Isuzu Forward</td><td><div class="bar"><span class="fill-green" style="width:95%"></span></div></td><td class="metric-val">74:18:00</td></tr>
+              <tr><td class="rank-col">3</td><td>RF-108 · Hino 500</td><td><div class="bar"><span class="fill-green" style="width:92%"></span></div></td><td class="metric-val">72:05:00</td></tr>
+              <tr><td class="rank-col">4</td><td>RF-103 · Freightliner M2</td><td><div class="bar"><span class="fill-green" style="width:83%"></span></div></td><td class="metric-val">65:21:00</td></tr>
+              <tr><td class="rank-col">5</td><td>RF-106 · Kenworth T370</td><td><div class="bar"><span class="fill-green" style="width:77%"></span></div></td><td class="metric-val">60:14:00</td></tr>
+            </tbody></table>
+          </div>
+
+          <div class="panel" data-title="Mayor tiempo de ralentí" data-ca="CA-01,CA-02,CA-03,CA-04,CA-05,CA-20,CA-25">
+            <div class="panel-header"><div><h3>Mayor tiempo de ralentí</h3><div class="subtitle">Ignición ON + velocidad &lt; 3 mph</div></div><button class="toggle-inline">Ver CA</button></div>
+            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-05</span><span class="chip">CA-20</span><span class="chip">CA-25</span></div>
+            <table><thead><tr><th class="rank-col">#</th><th>Vehículo</th><th>Barra</th><th>Valor</th></tr></thead><tbody>
+              <tr><td class="rank-col">1</td><td>RF-102 · Hino 300</td><td><div class="bar"><span class="fill-yellow" style="width:100%"></span></div></td><td class="metric-val">16:42:00</td></tr>
+              <tr><td class="rank-col">2</td><td>RF-109 · International MV</td><td><div class="bar"><span class="fill-yellow" style="width:87%"></span></div></td><td class="metric-val">14:35:00</td></tr>
+              <tr><td class="rank-col">3</td><td>RF-106 · Kenworth T370</td><td><div class="bar"><span class="fill-yellow" style="width:79%"></span></div></td><td class="metric-val">13:12:00</td></tr>
+              <tr><td class="rank-col">4</td><td>RF-104 · Freightliner M2</td><td><div class="bar"><span class="fill-yellow" style="width:74%"></span></div></td><td class="metric-val">12:18:00</td></tr>
+              <tr><td class="rank-col">5</td><td>RF-110 · Fuso Canter</td><td><div class="bar"><span class="fill-yellow" style="width:69%"></span></div></td><td class="metric-val">11:28:00</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+
+        <div class="section-title"><h2>Minisplit · rankings de uso</h2></div>
+        <div class="grid-2">
+          <div class="panel" data-title="Mayor tiempo de Minisplit encendido" data-ca="CA-01,CA-02,CA-03,CA-04,CA-05,CA-11,CA-15,CA-20,CA-26">
+            <div class="panel-header"><div><h3>Mayor tiempo de Minisplit encendido</h3><div class="subtitle">Estado ON inferido desde Input2</div></div><button class="toggle-inline">Ver CA</button></div>
+            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-05</span><span class="chip">CA-11</span><span class="chip">CA-15</span><span class="chip">CA-20</span><span class="chip">CA-26</span></div>
+            <table><thead><tr><th class="rank-col">#</th><th>Vehículo</th><th>Barra</th><th>Valor</th></tr></thead><tbody>
+              <tr><td class="rank-col">1</td><td>RF-102 · Hino 300</td><td><div class="bar"><span class="fill-purple" style="width:100%"></span></div></td><td class="metric-val">38:20:00</td></tr>
+              <tr><td class="rank-col">2</td><td>RF-109 · International MV</td><td><div class="bar"><span class="fill-purple" style="width:91%"></span></div></td><td class="metric-val">34:54:00</td></tr>
+              <tr><td class="rank-col">3</td><td>RF-104 · Freightliner M2</td><td><div class="bar"><span class="fill-purple" style="width:86%"></span></div></td><td class="metric-val">32:47:00</td></tr>
+              <tr><td class="rank-col">4</td><td>RF-107 · Isuzu ELF</td><td><div class="bar"><span class="fill-purple" style="width:82%"></span></div></td><td class="metric-val">31:16:00</td></tr>
+              <tr><td class="rank-col">5</td><td>RF-101 · Isuzu Forward</td><td><div class="bar"><span class="fill-purple" style="width:78%"></span></div></td><td class="metric-val">29:50:00</td></tr>
+            </tbody></table>
+          </div>
+          <div class="panel" data-title="Minisplit encendido con motor apagado" data-ca="CA-01,CA-02,CA-03,CA-04,CA-05,CA-14,CA-15,CA-16,CA-20,CA-27">
+            <div class="panel-header"><div><h3>Minisplit encendido con motor apagado</h3><div class="subtitle">Input2 ON + Ignición OFF</div></div><button class="toggle-inline">Ver CA</button></div>
+            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-05</span><span class="chip">CA-14</span><span class="chip">CA-15</span><span class="chip">CA-16</span><span class="chip">CA-20</span><span class="chip">CA-27</span></div>
+            <table><thead><tr><th class="rank-col">#</th><th>Vehículo</th><th>Barra</th><th>Valor</th></tr></thead><tbody>
+              <tr><td class="rank-col">1</td><td>RF-102 · Hino 300</td><td><div class="bar"><span class="fill-red" style="width:100%"></span></div></td><td class="metric-val">08:42:00</td></tr>
+              <tr><td class="rank-col">2</td><td>RF-107 · Isuzu ELF</td><td><div class="bar"><span class="fill-red" style="width:83%"></span></div></td><td class="metric-val">07:10:00</td></tr>
+              <tr><td class="rank-col">3</td><td>RF-109 · International MV</td><td><div class="bar"><span class="fill-red" style="width:74%"></span></div></td><td class="metric-val">06:28:00</td></tr>
+              <tr><td class="rank-col">4</td><td>RF-104 · Freightliner M2</td><td><div class="bar"><span class="fill-red" style="width:59%"></span></div></td><td class="metric-val">05:06:00</td></tr>
+              <tr><td class="rank-col">5</td><td>RF-101 · Isuzu Forward</td><td><div class="bar"><span class="fill-red" style="width:53%"></span></div></td><td class="metric-val">04:38:00</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="panel" data-title="Minisplit encendido en ralentí" data-ca="CA-01,CA-02,CA-03,CA-04,CA-05,CA-12,CA-15,CA-17,CA-20,CA-28">
+            <div class="panel-header"><div><h3>Minisplit encendido en ralentí</h3><div class="subtitle">Input2 ON + Ignición ON + Velocidad &lt; 3 mph</div></div><button class="toggle-inline">Ver CA</button></div>
+            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-05</span><span class="chip">CA-12</span><span class="chip">CA-15</span><span class="chip">CA-17</span><span class="chip">CA-20</span><span class="chip">CA-28</span></div>
+            <table><thead><tr><th class="rank-col">#</th><th>Vehículo</th><th>Barra</th><th>Valor</th></tr></thead><tbody>
+              <tr><td class="rank-col">1</td><td>RF-109 · International MV</td><td><div class="bar"><span class="fill-yellow" style="width:100%"></span></div></td><td class="metric-val">12:26:00</td></tr>
+              <tr><td class="rank-col">2</td><td>RF-102 · Hino 300</td><td><div class="bar"><span class="fill-yellow" style="width:96%"></span></div></td><td class="metric-val">11:58:00</td></tr>
+              <tr><td class="rank-col">3</td><td>RF-104 · Freightliner M2</td><td><div class="bar"><span class="fill-yellow" style="width:78%"></span></div></td><td class="metric-val">09:43:00</td></tr>
+              <tr><td class="rank-col">4</td><td>RF-101 · Isuzu Forward</td><td><div class="bar"><span class="fill-yellow" style="width:71%"></span></div></td><td class="metric-val">08:49:00</td></tr>
+              <tr><td class="rank-col">5</td><td>RF-110 · Fuso Canter</td><td><div class="bar"><span class="fill-yellow" style="width:62%"></span></div></td><td class="metric-val">07:41:00</td></tr>
+            </tbody></table>
+          </div>
+          <div class="panel" data-title="Minisplit encendido en movimiento" data-ca="CA-01,CA-02,CA-03,CA-04,CA-05,CA-13,CA-15,CA-18,CA-20,CA-29">
+            <div class="panel-header"><div><h3>Minisplit encendido en movimiento</h3><div class="subtitle">Input2 ON + Ignición ON + Velocidad ≥ 3 mph</div></div><button class="toggle-inline">Ver CA</button></div>
+            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-05</span><span class="chip">CA-13</span><span class="chip">CA-15</span><span class="chip">CA-18</span><span class="chip">CA-20</span><span class="chip">CA-29</span></div>
+            <table><thead><tr><th class="rank-col">#</th><th>Vehículo</th><th>Barra</th><th>Valor</th></tr></thead><tbody>
+              <tr><td class="rank-col">1</td><td>RF-104 · Freightliner M2</td><td><div class="bar"><span class="fill-blue" style="width:100%"></span></div></td><td class="metric-val">18:02:00</td></tr>
+              <tr><td class="rank-col">2</td><td>RF-107 · Isuzu ELF</td><td><div class="bar"><span class="fill-blue" style="width:92%"></span></div></td><td class="metric-val">16:37:00</td></tr>
+              <tr><td class="rank-col">3</td><td>RF-101 · Isuzu Forward</td><td><div class="bar"><span class="fill-blue" style="width:89%"></span></div></td><td class="metric-val">16:05:00</td></tr>
+              <tr><td class="rank-col">4</td><td>RF-102 · Hino 300</td><td><div class="bar"><span class="fill-blue" style="width:81%"></span></div></td><td class="metric-val">14:40:00</td></tr>
+              <tr><td class="rank-col">5</td><td>RF-109 · International MV</td><td><div class="bar"><span class="fill-blue" style="width:79%"></span></div></td><td class="metric-val">14:12:00</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+
+        <div class="section-title"><h2>Mapa de calor geográfico · México</h2><button class="toggle-inline ca-trigger" data-ca="CA-30,CA-31,CA-32,CA-33,CA-34" data-title="Sección mapa de calor geográfico" data-subtitle="Criterios relacionados con la nueva sección geográfica del dashboard.">Ver CA del mapa</button></div>
+        <div class="grid-2">
+          <div class="panel" data-title="Zonas/lugares donde más se activa el Input2" data-ca="CA-01,CA-02,CA-03,CA-04,CA-15,CA-30,CA-31,CA-33,CA-34,CA-35">
+            <div class="panel-header"><div><h3>Zonas/lugares donde más se activa el Input2</h3><div class="subtitle">Heatmap geográfico · intensidad según cantidad de activaciones de Input2</div></div><button class="toggle-inline">Ver CA</button></div>
+            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-15</span><span class="chip">CA-30</span><span class="chip">CA-31</span><span class="chip">CA-33</span><span class="chip">CA-34</span><span class="chip">CA-35</span></div>
+            <div class="map-wrap">
+              <svg class="mx-map" viewBox="0 0 760 480" xmlns="http://www.w3.org/2000/svg" aria-label="Mapa de México con heatmap de activaciones de Input2">
+                <path class="mx-outline" d="M86 102 L155 70 L225 75 L285 95 L335 90 L395 108 L448 120 L500 146 L538 165 L575 195 L620 205 L650 236 L676 266 L662 296 L628 310 L594 335 L554 340 L505 360 L472 372 L430 362 L390 336 L352 316 L312 302 L286 274 L244 245 L214 216 L172 196 L146 170 L112 154 L92 125 Z"/>
+                <circle class="mx-hot" cx="230" cy="125" r="32" fill="#60b7ff" opacity="0.45"/>
+                <circle class="mx-hot" cx="230" cy="125" r="18" fill="#ff7a00" opacity="0.58"/>
+                <circle class="mx-hot" cx="388" cy="216" r="64" fill="#5fb2ff" opacity="0.42"/>
+                <circle class="mx-hot" cx="388" cy="216" r="36" fill="#ff9a2f" opacity="0.48"/>
+                <circle class="mx-hot" cx="388" cy="216" r="18" fill="#ff4d4f" opacity="0.60"/>
+                <circle class="mx-hot" cx="332" cy="232" r="46" fill="#5fb2ff" opacity="0.36"/>
+                <circle class="mx-hot" cx="520" cy="270" r="40" fill="#5fb2ff" opacity="0.34"/>
+                <circle class="mx-hot" cx="520" cy="270" r="20" fill="#ff9a2f" opacity="0.48"/>
+                <circle class="mx-hot" cx="618" cy="300" r="34" fill="#5fb2ff" opacity="0.33"/>
+                <circle class="mx-hot" cx="140" cy="150" r="24" fill="#5fb2ff" opacity="0.26"/>
+                <circle class="pin" cx="230" cy="125" r="5"/><text class="pin-label" x="242" y="121">Monterrey</text>
+                <circle class="pin" cx="388" cy="216" r="5"/><text class="pin-label" x="400" y="212">CDMX</text>
+                <circle class="pin" cx="332" cy="232" r="5"/><text class="pin-label" x="344" y="228">Guadalajara</text>
+                <circle class="pin" cx="520" cy="270" r="5"/><text class="pin-label" x="532" y="266">Veracruz</text>
+                <circle class="pin" cx="618" cy="300" r="5"/><text class="pin-label" x="630" y="296">Mérida</text>
+                <circle class="pin" cx="140" cy="150" r="5"/><text class="pin-label" x="152" y="146">Tijuana</text>
+              </svg>
+              <div class="map-legend"><div class="legend-scale"><span class="legend-note">Menor</span><div class="scale-bar"></div><span class="legend-note">Mayor intensidad</span></div><div class="legend-note">Criterio visual: mayor cantidad de activaciones de Input2.</div></div>
+              <div class="map-list">
+                <div><strong>1.</strong> CDMX · 148 activaciones</div>
+                <div><strong>2.</strong> Monterrey · 103 activaciones</div>
+                <div><strong>3.</strong> Veracruz · 77 activaciones</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" data-title="Zonas/lugares donde más hay ralentí" data-ca="CA-01,CA-02,CA-03,CA-04,CA-25,CA-30,CA-32,CA-33,CA-34,CA-35">
+            <div class="panel-header"><div><h3>Zonas/lugares donde más hay ralentí</h3><div class="subtitle">Heatmap geográfico · intensidad según tiempo acumulado en ralentí</div></div><button class="toggle-inline">Ver CA</button></div>
+            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-25</span><span class="chip">CA-30</span><span class="chip">CA-32</span><span class="chip">CA-33</span><span class="chip">CA-34</span><span class="chip">CA-35</span></div>
+            <div class="map-wrap">
+              <svg class="mx-map" viewBox="0 0 760 480" xmlns="http://www.w3.org/2000/svg" aria-label="Mapa de México con heatmap de ralentí">
+                <path class="mx-outline" d="M86 102 L155 70 L225 75 L285 95 L335 90 L395 108 L448 120 L500 146 L538 165 L575 195 L620 205 L650 236 L676 266 L662 296 L628 310 L594 335 L554 340 L505 360 L472 372 L430 362 L390 336 L352 316 L312 302 L286 274 L244 245 L214 216 L172 196 L146 170 L112 154 L92 125 Z"/>
+                <circle class="mx-hot" cx="370" cy="215" r="70" fill="#60b7ff" opacity="0.38"/>
+                <circle class="mx-hot" cx="370" cy="215" r="44" fill="#ffb347" opacity="0.50"/>
+                <circle class="mx-hot" cx="370" cy="215" r="22" fill="#ff4d4f" opacity="0.62"/>
+                <circle class="mx-hot" cx="520" cy="258" r="52" fill="#60b7ff" opacity="0.34"/>
+                <circle class="mx-hot" cx="520" cy="258" r="25" fill="#ff9a2f" opacity="0.44"/>
+                <circle class="mx-hot" cx="245" cy="135" r="38" fill="#60b7ff" opacity="0.30"/>
+                <circle class="mx-hot" cx="245" cy="135" r="18" fill="#ff9a2f" opacity="0.42"/>
+                <circle class="mx-hot" cx="325" cy="240" r="34" fill="#60b7ff" opacity="0.28"/>
+                <circle class="mx-hot" cx="614" cy="295" r="28" fill="#60b7ff" opacity="0.25"/>
+                <circle class="pin" cx="245" cy="135" r="5"/><text class="pin-label" x="257" y="131">Monterrey</text>
+                <circle class="pin" cx="370" cy="215" r="5"/><text class="pin-label" x="382" y="211">CDMX</text>
+                <circle class="pin" cx="325" cy="240" r="5"/><text class="pin-label" x="337" y="236">Guadalajara</text>
+                <circle class="pin" cx="520" cy="258" r="5"/><text class="pin-label" x="532" y="254">Puebla / Veracruz</text>
+                <circle class="pin" cx="614" cy="295" r="5"/><text class="pin-label" x="626" y="291">Mérida</text>
+              </svg>
+              <div class="map-legend"><div class="legend-scale"><span class="legend-note">Menor</span><div class="scale-bar"></div><span class="legend-note">Mayor intensidad</span></div><div class="legend-note">Criterio visual: mayor tiempo acumulado en ralentí.</div></div>
+              <div class="map-list">
+                <div><strong>1.</strong> CDMX · 21.6 hrs de ralentí acumulado</div>
+                <div><strong>2.</strong> Puebla / Veracruz · 14.2 hrs de ralentí acumulado</div>
+                <div><strong>3.</strong> Monterrey · 11.3 hrs de ralentí acumulado</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <aside id="caSidebar" class="sidebar">
+      <div class="sidebar-inner">
+        <div class="sidebar-header">
+          <div>
+            <h3 id="sidebarTitle">Criterios de aceptación</h3>
+            <div id="sidebarSubtitle" class="sidebar-subtitle">Selecciona “Mostrar CA” o “Ver CA” en un bloque para revisar los criterios completos.</div>
+          </div>
+          <button id="closeSidebar" class="close-btn">Cerrar</button>
+        </div>
+        <div id="sidebarBody" class="sidebar-body"></div>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    const CA_TEXTS = {
+      "CA-01": "Dado que el usuario se encuentra en el dashboard, cuando selecciona una fecha inicial y una fecha final válidas, entonces el dashboard debe cargar la información usando únicamente los eventos comprendidos dentro de ese periodo.",
+      "CA-02": "Dado que existen grupos o flotillas disponibles para el usuario, cuando selecciona un grupo o flotilla, entonces el dashboard debe mostrar únicamente los vehículos pertenecientes a esa agrupación dentro del periodo seleccionado.",
+      "CA-03": "Dado que existen vehículos disponibles para el usuario, cuando selecciona un vehículo individual, entonces el dashboard debe mostrar únicamente las métricas calculadas para ese vehículo dentro del periodo seleccionado.",
+      "CA-04": "Dado que el usuario modifica el rango de fechas, grupo, flotilla o vehículo, cuando ejecuta la consulta o hace clic en Recargar, entonces todos los cuadros de resumen, rankings y mapas de calor deben actualizarse de acuerdo con los filtros aplicados.",
+      "CA-05": "Dado que el dashboard presenta métricas provenientes del reporte existente, cuando se calculan los valores para un mismo periodo, vehículo, grupo o flotilla, entonces el sistema debe usar la misma fuente de información, lógica de cálculo, unidades de medida y criterios de agrupación del reporte para las métricas compartidas.",
+      "CA-06": "Dado que el dashboard carga información para el periodo seleccionado, cuando se visualiza el encabezado de resumen, entonces debe mostrar cuadros consolidados para vehículos analizados, distancia total, horas de trabajo total, ralentí total, Minisplit encendido total, Minisplit en ralentí, Minisplit en movimiento y Minisplit con motor apagado.",
+      "CA-07": "Dado que el dashboard muestra el cuadro de vehículos analizados, cuando se aplican los filtros, entonces el valor debe corresponder a la cantidad de vehículos incluidos en la consulta y considerados para los cálculos del dashboard.",
+      "CA-08": "Dado que el dashboard muestra el cuadro de distancia total, cuando se aplican los filtros, entonces el valor debe corresponder a la suma de la distancia recorrida por los vehículos incluidos en el periodo seleccionado.",
+      "CA-09": "Dado que el dashboard muestra el cuadro de horas de trabajo total, cuando se aplican los filtros, entonces el valor debe corresponder a la suma de las horas marcadas por el horómetro de los vehículos, según la lógica implementada para el reporte o rawdata.",
+      "CA-10": "Dado que el dashboard muestra el cuadro de ralentí total, cuando se aplican los filtros, entonces el valor debe corresponder a la suma del tiempo en ralentí de los vehículos incluidos en el periodo seleccionado.",
+      "CA-11": "Dado que el dashboard muestra el cuadro de Minisplit encendido total, cuando se aplican los filtros, entonces el valor debe corresponder a la suma del tiempo en que el Minisplit estuvo encendido según Input2 del dispositivo GPS.",
+      "CA-12": "Dado que el dashboard muestra el cuadro de Minisplit en ralentí, cuando se aplican los filtros, entonces el valor debe corresponder a la suma del tiempo con Input2 encendido, ignición encendida y velocidad menor a 3 mph.",
+      "CA-13": "Dado que el dashboard muestra el cuadro de Minisplit en movimiento, cuando se aplican los filtros, entonces el valor debe corresponder a la suma del tiempo con Input2 encendido, ignición encendida y velocidad mayor o igual a 3 mph.",
+      "CA-14": "Dado que el dashboard muestra el cuadro de Minisplit con motor apagado, cuando se aplican los filtros, entonces el valor debe corresponder a la suma del tiempo con Input2 encendido e ignición apagada.",
+      "CA-15": "Dado que el dashboard calcula métricas de Minisplit, cuando evalúa si el Minisplit está encendido o apagado, entonces debe utilizar el Input2 del dispositivo GPS como fuente de estado.",
+      "CA-16": "Dado que el Minisplit está encendido según Input2 y la ignición está apagada, cuando el sistema calcula los tiempos del periodo, entonces ese intervalo debe contabilizarse como Minisplit encendido con motor apagado.",
+      "CA-17": "Dado que el Minisplit está encendido según Input2, la ignición está encendida y la velocidad es menor a 3 mph, cuando el sistema calcula los tiempos del periodo, entonces ese intervalo debe contabilizarse como Minisplit encendido en ralentí.",
+      "CA-18": "Dado que el Minisplit está encendido según Input2, la ignición está encendida y la velocidad es mayor o igual a 3 mph, cuando el sistema calcula los tiempos del periodo, entonces ese intervalo debe contabilizarse como Minisplit encendido en movimiento.",
+      "CA-19": "Dado que el dashboard calcula distancia recorrida por día, cuando se aplica un rango de fechas, entonces el valor debe obtenerse dividiendo la distancia recorrida entre la cantidad de días calendario del rango seleccionado.",
+      "CA-20": "Dado que el dashboard muestra un ranking, cuando se visualiza cada fila del ranking, entonces debe incluir posición, nombre del vehículo y valor calculado con su unidad de medida correspondiente.",
+      "CA-21": "Dado que existen datos de horómetro recorrido para varios vehículos, cuando el dashboard muestra el cuadro de mayor horómetro recorrido, entonces debe ordenar los vehículos de mayor a menor según el horómetro recorrido en el periodo seleccionado.",
+      "CA-22": "Dado que existen datos de kilometraje recorrido para varios vehículos, cuando el dashboard muestra el cuadro de mayor kilometraje recorrido, entonces debe ordenar los vehículos de mayor a menor según la distancia recorrida en el periodo seleccionado.",
+      "CA-23": "Dado que existen datos de distancia recorrida para varios vehículos, cuando el dashboard muestra el cuadro de distancia recorrida por día, entonces debe ordenar los vehículos de mayor a menor según la distancia promedio diaria calculada por días calendario.",
+      "CA-24": "Dado que existen horas de trabajo calculadas por horómetro para varios vehículos, cuando el dashboard muestra el cuadro de horas de trabajo por unidad, entonces debe ordenar los vehículos de mayor a menor según las horas de trabajo del periodo seleccionado.",
+      "CA-25": "Dado que existen tiempos de ralentí para varios vehículos, cuando el dashboard muestra el cuadro de mayor tiempo de ralentí, entonces debe ordenar los vehículos de mayor a menor según el tiempo total en ralentí del periodo seleccionado.",
+      "CA-26": "Dado que existen tiempos de Minisplit encendido para varios vehículos, cuando el dashboard muestra el cuadro de mayor tiempo de Minisplit encendido, entonces debe ordenar los vehículos de mayor a menor según el tiempo total con Minisplit encendido.",
+      "CA-27": "Dado que existen tiempos de Minisplit encendido con motor apagado para varios vehículos, cuando el dashboard muestra ese cuadro, entonces debe ordenar los vehículos de mayor a menor según el tiempo con Input2 encendido e ignición apagada.",
+      "CA-28": "Dado que existen tiempos de Minisplit encendido en ralentí para varios vehículos, cuando el dashboard muestra ese cuadro, entonces debe ordenar los vehículos de mayor a menor según el tiempo con Input2 encendido, ignición encendida y velocidad menor a 3 mph.",
+      "CA-29": "Dado que existen tiempos de Minisplit encendido en movimiento para varios vehículos, cuando el dashboard muestra ese cuadro, entonces debe ordenar los vehículos de mayor a menor según el tiempo con Input2 encendido, ignición encendida y velocidad mayor o igual a 3 mph.",
+      "CA-30": "Dado que el dashboard carga información para el periodo y filtros seleccionados, cuando se visualiza la sección geográfica, entonces debe mostrar un mapa de calor ubicado sobre México.",
+      "CA-31": "Dado que existen eventos georreferenciados de activación de Input2, cuando el dashboard muestra el mapa de calor de Input2, entonces debe representar las zonas o lugares con mayor cantidad de activaciones de Input2 dentro del periodo y filtros seleccionados.",
+      "CA-32": "Dado que existen eventos georreferenciados de ralentí, cuando el dashboard muestra el mapa de calor de ralentí, entonces debe representar las zonas o lugares con mayor acumulación de ralentí dentro del periodo y filtros seleccionados.",
+      "CA-33": "Dado que el usuario modifica el rango de fechas, grupo, flotilla o vehículo y recarga el dashboard, cuando se actualiza la sección geográfica, entonces los mapas de calor deben recalcularse según los filtros aplicados.",
+      "CA-34": "Dado que el dashboard muestra un mapa de calor, cuando se visualiza la sección geográfica, entonces cada mapa debe incluir una base geográfica de México y una referencia visual de intensidad.",
+      "CA-35": "Dado que no existen datos georreferenciados suficientes para construir un mapa de calor dentro del periodo y filtros seleccionados, cuando el dashboard intenta mostrar la vista correspondiente, entonces debe presentar un estado claro de sin datos y no debe mostrar una intensidad geográfica incorrecta.",
+      "CA-36": "Dado que el usuario consulta el dashboard con múltiples cuadros visibles, cuando aplica filtros o recarga la información, entonces la interfaz debe permitir visualizar la información sin bloquear la navegación ni impedir la interacción del usuario.",
+      "CA-37": "Dado que el usuario activa la opción de mostrar criterios de aceptación en el mockup, cuando selecciona un cuadro, un filtro, una sección o la opción global, entonces debe mostrarse una barra lateral derecha con los criterios relacionados escritos completos; al ocultarlos, la barra lateral debe desaparecer."
+    };
+
+    const sidebar = document.getElementById('caSidebar');
+    const sidebarBody = document.getElementById('sidebarBody');
+    const sidebarTitle = document.getElementById('sidebarTitle');
+    const sidebarSubtitle = document.getElementById('sidebarSubtitle');
+    const closeSidebar = document.getElementById('closeSidebar');
+    const globalBtn = document.getElementById('toggleAllCa');
+
+    function renderCriteria(criteriaIds, title, subtitle){
+      sidebarTitle.textContent = title || 'Criterios de aceptación';
+      sidebarSubtitle.textContent = subtitle || 'Listado de criterios relacionados con la vista seleccionada.';
+      sidebarBody.innerHTML = '';
+      criteriaIds.forEach(id => {
+        const text = CA_TEXTS[id] || 'Criterio pendiente por documentar.';
+        const div = document.createElement('div');
+        div.className = 'criterion';
+        div.innerHTML = `<h4>${id}</h4><p>${text}</p>`;
+        sidebarBody.appendChild(div);
+      });
+      sidebar.classList.add('open');
+    }
+
+    function hideSidebar(){
+      sidebar.classList.remove('open');
+      document.querySelectorAll('.ca-tags').forEach(el => el.classList.remove('visible'));
+      document.querySelectorAll('.toggle-inline').forEach(btn => {
+        if(!btn.classList.contains('ca-trigger')) btn.textContent = 'Ver CA';
+      });
+      globalBtn.textContent = 'Mostrar CA';
+    }
+
+    closeSidebar.addEventListener('click', hideSidebar);
+
+    globalBtn.addEventListener('click', () => {
+      const isOpen = sidebar.classList.contains('open') && globalBtn.textContent === 'Ocultar CA';
+      if(isOpen){ hideSidebar(); return; }
+      const allIds = Object.keys(CA_TEXTS).sort((a,b)=> parseInt(a.replace('CA-','')) - parseInt(b.replace('CA-','')));
+      renderCriteria(allIds, 'Criterios de aceptación del dashboard', 'Vista global de criterios activos en este mockup.');
+      document.querySelectorAll('.ca-tags').forEach(el => el.classList.add('visible'));
+      document.querySelectorAll('.toggle-inline').forEach(btn => {
+        if(!btn.classList.contains('ca-trigger')) btn.textContent = 'Ver CA';
+      });
+      globalBtn.textContent = 'Ocultar CA';
+    });
+
+    document.querySelectorAll('.ca-trigger').forEach(trigger => {
+      trigger.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const ids = trigger.dataset.ca.split(',').map(x => x.trim());
+        renderCriteria(ids, trigger.dataset.title || 'Criterios de aceptación', trigger.dataset.subtitle || 'Criterios relacionados con este elemento del dashboard.');
+        document.querySelectorAll('.ca-tags').forEach(el => el.classList.remove('visible'));
+        document.querySelectorAll('.toggle-inline').forEach(b => {
+          if(!b.classList.contains('ca-trigger')) b.textContent = 'Ver CA';
+        });
+        globalBtn.textContent = 'Mostrar CA';
+      });
+    });
+
+    document.querySelectorAll('.panel').forEach(panel => {
+      const btn = panel.querySelector('.toggle-inline');
+      const tags = panel.querySelector('.ca-tags');
+      btn.addEventListener('click', () => {
+        const ids = panel.dataset.ca.split(',').map(x=>x.trim());
+        renderCriteria(ids, panel.dataset.title, 'Criterios de aceptación relacionados con este bloque del dashboard.');
+        document.querySelectorAll('.ca-tags').forEach(el => el.classList.remove('visible'));
+        tags.classList.add('visible');
+        document.querySelectorAll('.toggle-inline').forEach(b => {
+          if(!b.classList.contains('ca-trigger')) b.textContent = 'Ver CA';
+        });
+        btn.textContent = 'CA visibles';
+        globalBtn.textContent = 'Mostrar CA';
+      });
+    });
+  </script>
+</body>
+</html>
