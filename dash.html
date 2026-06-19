@@ -149,7 +149,7 @@
             <label>Periodo <button class="ca-mini-btn ca-trigger" data-ca="CA-01,CA-04,CA-05" data-title="Filtro por periodo" data-subtitle="Criterios relacionados con el rango de fechas personalizado.">CA</button></label>
             <input value="Junio 01 - Junio 15, 2026" />
           </div>
-          <button class="btn ca-trigger" data-ca="CA-04,CA-36" data-title="Recarga / actualización del dashboard" data-subtitle="Criterios relacionados con la actualización dinámica de todos los cuadros al ejecutar la consulta.">RECARGAR</button>
+          <button class="btn ca-trigger" data-ca="CA-04,CA-35" data-title="Recarga / actualización del dashboard" data-subtitle="Criterios relacionados con la actualización dinámica de todos los cuadros al ejecutar la consulta.">RECARGAR</button>
           <button id="toggleAllCa" class="btn secondary">Mostrar CA</button>
         </div>
 
@@ -299,11 +299,11 @@
           </div>
         </div>
 
-        <div class="section-title"><h2>Mapa de calor geográfico · México</h2><button class="toggle-inline ca-trigger" data-ca="CA-30,CA-31,CA-32,CA-33,CA-34" data-title="Sección mapa de calor geográfico" data-subtitle="Criterios relacionados con la nueva sección geográfica del dashboard.">Ver CA del mapa</button></div>
+        <div class="section-title"><h2>Mapa de calor geográfico · México</h2><button class="toggle-inline ca-trigger" data-ca="CA-30,CA-31,CA-32,CA-33,CA-34,CA-35,CA-36" data-title="Mapas de calor geográficos" data-subtitle="Criterios relacionados con la sección geográfica del dashboard.">Ver CA del mapa</button></div>
         <div class="grid-2">
-          <div class="panel" data-title="Zonas/lugares donde más se activa el Input2" data-ca="CA-01,CA-02,CA-03,CA-04,CA-15,CA-30,CA-31,CA-33,CA-34,CA-35">
+          <div class="panel" data-title="Zonas/lugares donde más se activa el Input2" data-ca="CA-01,CA-02,CA-03,CA-04,CA-15,CA-30,CA-31,CA-33,CA-34,CA-35,CA-36">
             <div class="panel-header"><div><h3>Zonas/lugares donde más se activa el Input2</h3><div class="subtitle">Heatmap geográfico · intensidad según cantidad de activaciones de Input2</div></div><button class="toggle-inline">Ver CA</button></div>
-            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-15</span><span class="chip">CA-30</span><span class="chip">CA-31</span><span class="chip">CA-33</span><span class="chip">CA-34</span><span class="chip">CA-35</span></div>
+            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-15</span><span class="chip">CA-30</span><span class="chip">CA-31</span><span class="chip">CA-33</span><span class="chip">CA-34</span><span class="chip">CA-35</span><span class="chip">CA-36</span></div>
             <div class="map-wrap">
               <svg class="mx-map" viewBox="0 0 760 480" xmlns="http://www.w3.org/2000/svg" aria-label="Mapa de México con heatmap de activaciones de Input2">
                 <path class="mx-outline" d="M86 102 L155 70 L225 75 L285 95 L335 90 L395 108 L448 120 L500 146 L538 165 L575 195 L620 205 L650 236 L676 266 L662 296 L628 310 L594 335 L554 340 L505 360 L472 372 L430 362 L390 336 L352 316 L312 302 L286 274 L244 245 L214 216 L172 196 L146 170 L112 154 L92 125 Z"/>
@@ -333,9 +333,9 @@
             </div>
           </div>
 
-          <div class="panel" data-title="Zonas/lugares donde más hay ralentí" data-ca="CA-01,CA-02,CA-03,CA-04,CA-25,CA-30,CA-32,CA-33,CA-34,CA-35">
+          <div class="panel" data-title="Zonas/lugares donde más hay ralentí" data-ca="CA-01,CA-02,CA-03,CA-04,CA-25,CA-30,CA-32,CA-33,CA-34,CA-35,CA-36">
             <div class="panel-header"><div><h3>Zonas/lugares donde más hay ralentí</h3><div class="subtitle">Heatmap geográfico · intensidad según tiempo acumulado en ralentí</div></div><button class="toggle-inline">Ver CA</button></div>
-            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-25</span><span class="chip">CA-30</span><span class="chip">CA-32</span><span class="chip">CA-33</span><span class="chip">CA-34</span><span class="chip">CA-35</span></div>
+            <div class="ca-tags"><span class="chip">CA-01</span><span class="chip">CA-02</span><span class="chip">CA-03</span><span class="chip">CA-04</span><span class="chip">CA-25</span><span class="chip">CA-30</span><span class="chip">CA-32</span><span class="chip">CA-33</span><span class="chip">CA-34</span><span class="chip">CA-35</span><span class="chip">CA-36</span></div>
             <div class="map-wrap">
               <svg class="mx-map" viewBox="0 0 760 480" xmlns="http://www.w3.org/2000/svg" aria-label="Mapa de México con heatmap de ralentí">
                 <path class="mx-outline" d="M86 102 L155 70 L225 75 L285 95 L335 90 L395 108 L448 120 L500 146 L538 165 L575 195 L620 205 L650 236 L676 266 L662 296 L628 310 L594 335 L554 340 L505 360 L472 372 L430 362 L390 336 L352 316 L312 302 L286 274 L244 245 L214 216 L172 196 L146 170 L112 154 L92 125 Z"/>
@@ -385,12 +385,12 @@
       "CA-01": "Dado que el usuario se encuentra en el dashboard, cuando selecciona una fecha inicial y una fecha final válidas, entonces el dashboard debe cargar la información usando únicamente los eventos comprendidos dentro de ese periodo.",
       "CA-02": "Dado que existen grupos o flotillas disponibles para el usuario, cuando selecciona un grupo o flotilla, entonces el dashboard debe mostrar únicamente los vehículos pertenecientes a esa agrupación dentro del periodo seleccionado.",
       "CA-03": "Dado que existen vehículos disponibles para el usuario, cuando selecciona un vehículo individual, entonces el dashboard debe mostrar únicamente las métricas calculadas para ese vehículo dentro del periodo seleccionado.",
-      "CA-04": "Dado que el usuario modifica el rango de fechas, grupo, flotilla o vehículo, cuando ejecuta la consulta o hace clic en Recargar, entonces todos los cuadros de resumen, rankings y mapas de calor deben actualizarse de acuerdo con los filtros aplicados.",
-      "CA-05": "Dado que el dashboard presenta métricas provenientes del reporte existente, cuando se calculan los valores para un mismo periodo, vehículo, grupo o flotilla, entonces el sistema debe usar la misma fuente de información, lógica de cálculo, unidades de medida y criterios de agrupación del reporte para las métricas compartidas.",
+      "CA-04": "Dado que el usuario modifica el rango de fechas, grupo, flotilla o vehículo, cuando hace clic en el botón Recargar, entonces todos los cuadros de resumen, rankings y mapas de calor deben actualizarse de acuerdo con los filtros aplicados.",
+      "CA-05": "Dado que el dashboard presenta métricas provenientes del reporte existente, cuando se calculan los valores para un mismo periodo, vehículo, grupo o flotilla, entonces el sistema debe usar la misma fuente de información, lógica de cálculo, unidades de medida y criterios de agrupación del reporte.",
       "CA-06": "Dado que el dashboard carga información para el periodo seleccionado, cuando se visualiza el encabezado de resumen, entonces debe mostrar cuadros consolidados para vehículos analizados, distancia total, horas de trabajo total, ralentí total, Minisplit encendido total, Minisplit en ralentí, Minisplit en movimiento y Minisplit con motor apagado.",
       "CA-07": "Dado que el dashboard muestra el cuadro de vehículos analizados, cuando se aplican los filtros, entonces el valor debe corresponder a la cantidad de vehículos incluidos en la consulta y considerados para los cálculos del dashboard.",
       "CA-08": "Dado que el dashboard muestra el cuadro de distancia total, cuando se aplican los filtros, entonces el valor debe corresponder a la suma de la distancia recorrida por los vehículos incluidos en el periodo seleccionado.",
-      "CA-09": "Dado que el dashboard muestra el cuadro de horas de trabajo total, cuando se aplican los filtros, entonces el valor debe corresponder a la suma de las horas marcadas por el horómetro de los vehículos, según la lógica implementada para el reporte o rawdata.",
+      "CA-09": "Dado que el dashboard muestra el cuadro de horas de trabajo total, cuando se aplican los filtros, entonces el valor debe corresponder a la suma de las horas marcadas por el horómetro de los vehículos.",
       "CA-10": "Dado que el dashboard muestra el cuadro de ralentí total, cuando se aplican los filtros, entonces el valor debe corresponder a la suma del tiempo en ralentí de los vehículos incluidos en el periodo seleccionado.",
       "CA-11": "Dado que el dashboard muestra el cuadro de Minisplit encendido total, cuando se aplican los filtros, entonces el valor debe corresponder a la suma del tiempo en que el Minisplit estuvo encendido según Input2 del dispositivo GPS.",
       "CA-12": "Dado que el dashboard muestra el cuadro de Minisplit en ralentí, cuando se aplican los filtros, entonces el valor debe corresponder a la suma del tiempo con Input2 encendido, ignición encendida y velocidad menor a 3 mph.",
@@ -411,15 +411,14 @@
       "CA-27": "Dado que existen tiempos de Minisplit encendido con motor apagado para varios vehículos, cuando el dashboard muestra ese cuadro, entonces debe ordenar los vehículos de mayor a menor según el tiempo con Input2 encendido e ignición apagada.",
       "CA-28": "Dado que existen tiempos de Minisplit encendido en ralentí para varios vehículos, cuando el dashboard muestra ese cuadro, entonces debe ordenar los vehículos de mayor a menor según el tiempo con Input2 encendido, ignición encendida y velocidad menor a 3 mph.",
       "CA-29": "Dado que existen tiempos de Minisplit encendido en movimiento para varios vehículos, cuando el dashboard muestra ese cuadro, entonces debe ordenar los vehículos de mayor a menor según el tiempo con Input2 encendido, ignición encendida y velocidad mayor o igual a 3 mph.",
-      "CA-30": "Dado que el dashboard carga información para el periodo y filtros seleccionados, cuando se visualiza la sección geográfica, entonces debe mostrar un mapa de calor ubicado sobre México.",
+      "CA-30": "Dado que el dashboard carga información para el periodo y filtros seleccionados, cuando se visualiza la sección geográfica, entonces debe mostrar un mapa de calor.",
       "CA-31": "Dado que existen eventos georreferenciados de activación de Input2, cuando el dashboard muestra el mapa de calor de Input2, entonces debe representar las zonas o lugares con mayor cantidad de activaciones de Input2 dentro del periodo y filtros seleccionados.",
       "CA-32": "Dado que existen eventos georreferenciados de ralentí, cuando el dashboard muestra el mapa de calor de ralentí, entonces debe representar las zonas o lugares con mayor acumulación de ralentí dentro del periodo y filtros seleccionados.",
       "CA-33": "Dado que el usuario modifica el rango de fechas, grupo, flotilla o vehículo y recarga el dashboard, cuando se actualiza la sección geográfica, entonces los mapas de calor deben recalcularse según los filtros aplicados.",
-      "CA-34": "Dado que el dashboard muestra un mapa de calor, cuando se visualiza la sección geográfica, entonces cada mapa debe incluir una base geográfica de México y una referencia visual de intensidad.",
-      "CA-35": "Dado que no existen datos georreferenciados suficientes para construir un mapa de calor dentro del periodo y filtros seleccionados, cuando el dashboard intenta mostrar la vista correspondiente, entonces debe presentar un estado claro de sin datos y no debe mostrar una intensidad geográfica incorrecta.",
-      "CA-36": "Dado que el usuario consulta el dashboard con múltiples cuadros visibles, cuando aplica filtros o recarga la información, entonces la interfaz debe permitir visualizar la información sin bloquear la navegación ni impedir la interacción del usuario.",
-      "CA-37": "Dado que el usuario activa la opción de mostrar criterios de aceptación en el mockup, cuando selecciona un cuadro, un filtro, una sección o la opción global, entonces debe mostrarse una barra lateral derecha con los criterios relacionados escritos completos; al ocultarlos, la barra lateral debe desaparecer."
-    };
+      "CA-34": "Dado que no existen datos georreferenciados suficientes para construir un mapa de calor dentro del periodo y filtros seleccionados, cuando el dashboard intenta mostrar la vista correspondiente, entonces debe presentar un estado claro de sin datos y no debe mostrar una intensidad geográfica incorrecta.",
+      "CA-35": "Dado que el usuario consulta el dashboard con múltiples cuadros visibles, cuando aplica filtros o recarga la información, entonces la interfaz debe permitir visualizar la información sin bloquear la navegación ni impedir la interacción del usuario.",
+      "CA-36": "Dado que un vehículo no tiene los datos necesarios para calcular una métrica dentro del periodo y filtros seleccionados, cuando el dashboard genera el ranking o mapa correspondiente, entonces el vehículo o evento no debe afectar el resultado y no debe mostrarse como valor calculado incorrecto. Para métricas de ralentí, odómetro, horómetro y distancia, el vehículo solo podrá aparecer con valor cero si existen registros válidos que permitan confirmar ese cálculo."
+};
 
     const sidebar = document.getElementById('caSidebar');
     const sidebarBody = document.getElementById('sidebarBody');
